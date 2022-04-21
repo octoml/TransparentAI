@@ -21,7 +21,7 @@ def generate_from_model():
             do_sample=True,
             temperature=0.9,
             max_length=100,
-       )
+        )
         decoded_output = tokenizer.batch_decode(outputs)
         import pdb; pdb.set_trace()
     return _wrapper
