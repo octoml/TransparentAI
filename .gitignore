@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 *onnx/
+
+# Ignore downloaded models
+models/**/*.onnx

@@ -5,6 +5,8 @@ dev:
 # Setup to run the application locally.
 setup:
 	pip install -r requirements.txt
+	mkdir -p models/onnx_models
+	wget https://github.com/onnx/models/raw/main/text/machine_comprehension/gpt-2/model/gpt2-lm-head-10.onnx -P models/onnx_models
 
 # Export Transformer Models
 export:
