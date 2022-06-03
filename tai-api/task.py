@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 
+from ariel import function_from_model
 from transformers import GPT2LMHeadModel
 from transformers.modeling_outputs import CausalLMOutputWithCrossAttentions
 from transformers import GPT2Tokenizer
@@ -29,6 +30,30 @@ class ONNXTask(Task):
 
     def inference(self, *args):
         return super().inference(*args)
+
+
+
+class ONNXGeneration(ONNXTask):
+    def __init__(self, model_file: str) -> None:
+        super().__init__(model_file)
+        self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+        self.model = generator_from_onnx(self.model_file)
+
+    def preprocess(self, text):
+        encoded_inputs = self.tokenizer(text, return_tensors="pt")
+        return encoded_inputs
+
+    def postprocess(self, outputs):
+        decoded_output = self.tokenizer.batch_decode(outputs)
+        return decoded_output
+
+    def inference(self, inputs):
+        return self.model(inputs)
+
+class OctoMLONNXGeneration(ONNXGeneration):
+    def __init__(self, model_name: str, port=8001) -> None:
+        self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+        self.model = generator_for_octo(model_name, port)
 
 def generator_from_onnx(model_file):
 
@@ -59,19 +84,33 @@ def generator_from_onnx(model_file):
 
     return _wrapper
 
-class ONNXGeneration(ONNXTask):
-    def __init__(self, model_file: str) -> None:
-        super().__init__(model_file)
-        self.tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-        self.model = generator_from_onnx(self.model_file)
 
-    def preprocess(self, text):
-        encoded_inputs = self.tokenizer(text, return_tensors="pt")
-        return encoded_inputs
+def generator_for_octo(model_name, port=8001):
+    from transformers import GPT2LMHeadModel
+    from transformers.modeling_outputs import CausalLMOutputWithCrossAttentions
 
-    def postprocess(self, outputs):
-        decoded_output = self.tokenizer.batch_decode(outputs)
-        return decoded_output
+    model = GPT2LMHeadModel.from_pretrained("gpt2")
+    model_func = function_from_model("gpt2-lm-head-10", port=port)
 
-    def inference(self, inputs):
-        return self.model(inputs)
+    def remote_eval(*args, **kwargs):
+        input_ids = kwargs["input_ids"]
+        onnx_inputs = {}
+        # gpt2 onnx model expects an extra dimension for some reason
+        onnx_inputs["input1"] = np.expand_dims(input_ids.numpy(), axis=0)
+        outputs = model_func(**onnx_inputs)
+        # unwrap the extra dimension
+        logits = torch.tensor(outputs[0][0])
+        res = CausalLMOutputWithCrossAttentions(logits=logits)
+        return res
+
+    model.forward = remote_eval
+
+    def _wrapper(encoded_inputs):
+        return model.generate(
+            encoded_inputs.input_ids,
+            do_sample=True,
+            temperature=0.9,
+            max_length=MAX_SEQUENCE_LENGTH,
+        )
+
+    return _wrapper

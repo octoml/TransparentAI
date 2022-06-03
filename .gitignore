@@ -132,3 +132,5 @@ dmypy.json
 
 # Ignore downloaded models
 models/**/*.onnx
+
+*.octoml_cache

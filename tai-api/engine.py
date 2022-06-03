@@ -1,6 +1,6 @@
 from csv import excel_tab
 from transformers import pipeline
-from .task import ONNXGeneration
+from .task import ONNXGeneration, OctoMLONNXGeneration
 
 class Engine:
     def complete(self, prompt: str) -> str:
@@ -22,12 +22,22 @@ class ONNXGPT2Engine(Engine):
         outputs = self.task.inference(inputs)
         return self.task.postprocess(outputs)
 
+class OctoONNXGPT2Engine(Engine):
+    def __init__(self):
+        self.task = OctoMLONNXGeneration("gpt2")
+
+    def complete(self, prompt: str) -> str:
+        inputs = self.task.preprocess(prompt)
+        outputs = self.task.inference(inputs)
+        return self.task.postprocess(outputs)
+
 class UnknownEngine(Exception):
     pass
 
 ENGINE_MAP = {
     "hf-gpt-2": HFGPT2Engine(),
-    "onnx-gpt-2": ONNXGPT2Engine()
+    "onnx-gpt-2": ONNXGPT2Engine(),
+    "octo-onnx-gpt-2": OctoONNXGPT2Engine(),
 }
 
 def get_engine(engine_name: str) -> Engine:
