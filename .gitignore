@@ -134,3 +134,4 @@ dmypy.json
 models/**/*.onnx
 
 *.octoml_cache
+node_modules
