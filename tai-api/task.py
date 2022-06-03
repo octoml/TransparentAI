@@ -90,7 +90,7 @@ def generator_for_octo(model_name, port=8001):
     from transformers.modeling_outputs import CausalLMOutputWithCrossAttentions
 
     model = GPT2LMHeadModel.from_pretrained("gpt2")
-    model_func = function_from_model("gpt2-lm-head-10", port=port)
+    model_func = function_from_model(model_name, port=port)
 
     def remote_eval(*args, **kwargs):
         input_ids = kwargs["input_ids"]

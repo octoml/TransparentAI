@@ -24,7 +24,7 @@ class ONNXGPT2Engine(Engine):
 
 class OctoONNXGPT2Engine(Engine):
     def __init__(self):
-        self.task = OctoMLONNXGeneration("gpt2")
+        self.task = OctoMLONNXGeneration("gpt2-lm-head-10")
 
     def complete(self, prompt: str) -> str:
         inputs = self.task.preprocess(prompt)
