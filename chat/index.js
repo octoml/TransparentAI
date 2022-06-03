@@ -34,12 +34,13 @@ function getPredictedText(io, modelUrl, name, prompt) {
       prompt: "hey nerd"
     })
     .then(function(response) {
-      console.log(response.data)
       // Idk why these aren't unified
       text = response.data.response[0].generated_text
       if (text == undefined) {
           text = response.data.response
       }
+      console.log(text, response.headers['x-process-time']);
+      text += ` (in ${parseFloat(response.headers['x-process-time']).toFixed(4)}s)`
 
       io.emit('chat message', name + " says: " + text )
     })
