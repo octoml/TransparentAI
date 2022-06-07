@@ -1,3 +1,4 @@
+# vim: set noexpandtab:
 # Run the main development flow.
 dev:
 	uvicorn tai-api.main:app --reload --port 9000
@@ -11,3 +12,8 @@ setup:
 # Export Transformer Models
 export:
 	python
+
+# build all docker images
+build-docker:
+	echo Building docker images
+	cd chat && docker build -t chat .
