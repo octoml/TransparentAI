@@ -93,7 +93,7 @@ def generator_for_octo(model_name, port=8001):
     model = GPT2LMHeadModel.from_pretrained("gpt2")
     host = "localhost"
     if os.getenv("OCTO_HOST") is not None:
-        host = os.gevenv("OCTO_HOST")
+        host = os.getenv("OCTO_HOST")
 
     model_func = function_from_model(model_name, hostname=host, port=port)
 
