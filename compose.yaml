@@ -4,6 +4,8 @@ services:
     image: transparent-ai/tai-api
     environment:
       OCTO_HOST: gpt2
+    ports:
+      - "9000:9000"
   gpt2:
     image: transparent-ai/gpt2-lm-head-10
     ports:
