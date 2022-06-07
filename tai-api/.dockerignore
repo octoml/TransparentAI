@@ -128,11 +128,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-*onnx/
+#*onnx/
 
 # Ignore downloaded models
-models/**/*.onnx
+#models/**/*.onnx
 
 *.octoml_cache
 node_modules
-tai-api/models/
+Dockerfile
+venv

@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import os
 
 from ariel import function_from_model
 from transformers import GPT2LMHeadModel
@@ -90,7 +91,11 @@ def generator_for_octo(model_name, port=8001):
     from transformers.modeling_outputs import CausalLMOutputWithCrossAttentions
 
     model = GPT2LMHeadModel.from_pretrained("gpt2")
-    model_func = function_from_model(model_name, port=port)
+    host = "localhost"
+    if os.getenv("OCTO_HOST") is not None:
+        host = os.gevenv("OCTO_HOST")
+
+    model_func = function_from_model(model_name, hostname=host, port=port)
 
     def remote_eval(*args, **kwargs):
         input_ids = kwargs["input_ids"]

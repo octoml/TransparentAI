@@ -1,6 +1,6 @@
 from csv import excel_tab
 from transformers import pipeline
-from .task import ONNXGeneration, OctoMLONNXGeneration
+from task import ONNXGeneration, OctoMLONNXGeneration
 
 class Engine:
     def complete(self, prompt: str) -> str:

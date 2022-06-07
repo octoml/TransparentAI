@@ -3,7 +3,7 @@ import time
 from typing import Union, Optional, List
 
 from fastapi import FastAPI, Request
-from .engine import get_engine
+from engine import get_engine
 from pydantic import BaseModel
 
 
