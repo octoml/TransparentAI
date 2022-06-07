@@ -9,13 +9,13 @@ Install [Just](https://github.com/casey/just) (I (Jared) refuse to use Make).
 To get up and running:
 
 ```
-just setup
+just docker-build
 ```
 
 After that you can run:
 
 ```
-just dev
+just compose-up
 ```
 to launch the local development flow.
 
