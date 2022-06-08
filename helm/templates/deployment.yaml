@@ -1,0 +1,105 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-chat
+  name: {{ .Release.Name }}-chat
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.chat }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-chat
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-chat
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-chat
+        image: "{{ .Values.imageRegistry }}/{{ .Values.images.chat.name}}:{{ .Values.images.chat.tag }}"
+        ports:
+        - containerPort: {{ .Values.chatPort}}
+          protocol: TCP
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-gpt2
+  name: {{ .Release.Name }}-gpt2
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.gpt2 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-gpt2
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-gpt2
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-gpt2
+        image: "{{ .Values.imageRegistry }}/{{ .Values.images.gpt2.name}}:{{ .Values.images.gpt2.tag }}"
+        command:
+        - tritonserver
+        args:
+        - --model-repository=octoml/models
+        - --strict-model-config=false
+        ports:
+        - containerPort: {{ .Values.gpt2HttpPort}}
+          protocol: TCP
+        - containerPort: {{ .Values.gpt2GrpcPort}}
+          protocol: TCP
+        - containerPort: {{ .Values.gpt2PromPort}}
+          protocol: TCP
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-taiapi
+  name: {{ .Release.Name }}-taiapi
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.taiapi }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-taiapi
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-taiapi
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-taiapi
+        image: "{{ .Values.imageRegistry }}/{{ .Values.images.taiapi.name}}:{{ .Values.images.taiapi.tag }}"
+        ports:
+        - containerPort: {{ .Values.taiapiPort}}
+          protocol: TCP
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
