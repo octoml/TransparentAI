@@ -18,7 +18,11 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-chat
+        imagePullPolicy: Always
         image: "{{ .Values.imageRegistry }}/{{ .Values.images.chat.name}}:{{ .Values.images.chat.tag }}"
+        env:
+        - name: TAI_API_HOST
+          value: {{ .Release.Name }}-taiapi
         ports:
         - containerPort: {{ .Values.chatPort}}
           protocol: TCP
@@ -50,6 +54,7 @@ spec:
     spec:
       containers:
       - name: {{ .Release.Name }}-gpt2
+        imagePullPolicy: Always
         image: "{{ .Values.imageRegistry }}/{{ .Values.images.gpt2.name}}:{{ .Values.images.gpt2.tag }}"
         command:
         - tritonserver
@@ -92,9 +97,25 @@ spec:
       containers:
       - name: {{ .Release.Name }}-taiapi
         image: "{{ .Values.imageRegistry }}/{{ .Values.images.taiapi.name}}:{{ .Values.images.taiapi.tag }}"
+        imagePullPolicy: Always
+        env:
+        - name: OCTO_HOST
+          value: {{ .Release.Name }}-gpt2
         ports:
         - containerPort: {{ .Values.taiapiPort}}
           protocol: TCP
+        resources:
+          requests:
+            memory: "4Gi"
+            ephemeral-storage: "8Gi"
+            cpu: "8"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.taiapiPort}}
+          initialDelaySeconds: 5
+          failureThreshold: 60 # 60 seconds
+          periodSeconds: 1
       {{- if .Values.tolerations }}
       tolerations:
 {{ toYaml .Values.tolerations | indent 6 }}

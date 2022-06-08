@@ -11,3 +11,40 @@ spec:
     targetPort: {{ .Values.chatPort }}
   selector:
     app: {{ .Release.Name }}-chat
+apiVersion: v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-taiapi
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: http
+    port: {{ .Values.taiapiPort }}
+    protocol: TCP
+    targetPort: {{ .Values.taiapiPort }}
+  selector:
+    app: {{ .Release.Name }}-taiapi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-gpt2
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: http
+    port: {{ .Values.gpt2HttpPort}}
+    protocol: TCP
+    targetPort: {{ .Values.gpt2HttpPort}}
+  - name: grpc
+    port: {{ .Values.gpt2GrpcPort}}
+    protocol: TCP
+    targetPort: {{ .Values.gpt2GrpcPort}}
+  - name:  prometheus
+    port: {{ .Values.gpt2PromPort}}
+    protocol: TCP
+    targetPort: {{ .Values.gpt2PromPort}}
+  selector:
+    app: {{ .Release.Name }}-gpt2
