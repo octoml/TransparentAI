@@ -21,7 +21,7 @@ spec:
         imagePullPolicy: Always
         image: "{{ .Values.imageRegistry }}/{{ .Values.images.chat.name}}:{{ .Values.images.chat.tag }}"
         env:
-        - name: TAI_API_HOST
+        - name: TAI_API_HOST #TODO better service discovery
           value: {{ .Release.Name }}-taiapi
         ports:
         - containerPort: {{ .Values.chatPort}}
@@ -99,7 +99,7 @@ spec:
         image: "{{ .Values.imageRegistry }}/{{ .Values.images.taiapi.name}}:{{ .Values.images.taiapi.tag }}"
         imagePullPolicy: Always
         env:
-        - name: OCTO_HOST
+        - name: OCTO_HOST #TODO better service discovery
           value: {{ .Release.Name }}-gpt2
         ports:
         - containerPort: {{ .Values.taiapiPort}}

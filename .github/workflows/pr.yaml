@@ -6,6 +6,7 @@ on:
 
 env:
   OCTOML_EMPLOYEE: 1
+  OCTOML_AGREE_TO_TERMS: 1
   OCTOML_TELEMETRY: false
 
 

@@ -3,7 +3,7 @@ services:
   taiapi:
     image: transparent-ai/tai-api
     environment:
-      OCTO_HOST: gpt2
+      OCTO_HOST: gpt2 # TODO: better service discovery
     ports:
       - "9000:9000"
   gpt2:
@@ -16,6 +16,6 @@ services:
   chat:
     image: transparent-ai/chat
     environment:
-      TAI_API_HOST: taiapi
+      TAI_API_HOST: taiapi # TODO: better service discoverdy
     ports:
       - "3000:3000"
