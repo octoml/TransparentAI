@@ -1,0 +1,45 @@
+# Number of replicas for the Deployment
+replicas:
+  gpt2:   1
+  chat:   1
+  taiapi: 1
+
+
+# Ports
+chatPort:       3000
+gpt2HttpPort:   8000
+gpt2GrpcPort:   8001
+gpt2PromPort:   8002
+taiapiPort:     9000
+
+
+# Full path (url) to the image and the tag to use
+imageRegistry: gcr.io/octonaut-skrum
+images:
+  chat:
+    name: chat
+    tag: latest
+  gpt2:
+    name: gpt2
+    tag: latest
+  taiapi:
+    name: tai-api
+    tag: latest
+
+# Hostname for the ingress
+hostname:
+
+tolerations: []
+## If you want to set tolerations, delete the `[]` in the line above
+## and uncomment/fill in this example block
+# - key: "octoml.ai/octomizer-platform"
+#   operator: "Equal"
+#   value: "aws-c6g.large"
+#   effect: "NoSchedule"
+
+nodeSelector: {}
+## If you want to set node selector, delete the `{}` in the line above
+## and uncomment/fill in this example block
+#  octoml.ai/octomizer-platform: "aws-c6g.large"
+#  label-key: "label-value"
+
