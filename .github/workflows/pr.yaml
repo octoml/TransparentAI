@@ -42,3 +42,5 @@ jobs:
       run: curl localhost:8000/v2/health/ready
     - name: check taiapi
       run: curl localhost:9000
+    - name: validate that helm chart can be packaged, this doesn't push it but does some sanity checking on the helm chart
+      run: cd helm && helm package .
