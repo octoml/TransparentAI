@@ -32,8 +32,8 @@ jobs:
       run: just docker-build
     - name: docker compose up
       run: docker-compose up -d
-    - name: sleep 45 # taiapi pulls a big file from the internet
-      run: sleep 45
+    - name: sleep 100 # taiapi pulls a big file from the internet
+      run: sleep 100
     - name: docker ps
       run: docker ps
     - name: check chat
