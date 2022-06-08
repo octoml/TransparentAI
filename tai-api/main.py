@@ -20,6 +20,10 @@ async def add_process_time_header(request: Request, call_next):
     response.headers["X-Process-Time"] = str(process_time)
     return response
 
+#TODO make this not log every time
+@app.get("/healthz")
+def healthy():
+    return { "healthy": "ok" }
 
 
 @app.post("/engines/{engine_name}/completions")
