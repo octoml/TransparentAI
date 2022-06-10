@@ -10,21 +10,21 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  io.emit('chat message', "Welcome to chat! We have 3 bots for you to chat with, Huggy, Octo, and Oni(onnx). Try it out with 'Huggy: I was once walking down the street and'")
-  socket.on('chat message', msg => {
+  io.emit('gen text', {msg: "Welcome to chat! We have 3 bots for you to chat with, Huggy, Octo, and Oni(onnx). Try it out with 'Huggy: I was once walking down the street and'"})
+  socket.on('gen text', msg => {
     console.log(msg);
-    io.emit('chat message', msg);
-    if (msg.startsWith("Huggy")) {
+    io.emit('gen text', {msg: msg.msg} );
+    if (msg.model ==  "Huggy") {
         modelUrl = "http://" + taiapi + ":9000/engines/hf-gpt-2/completions"
-        getPredictedText(io, modelUrl, "Huggy", msg.slice(5).trim())
+        getPredictedText(io, modelUrl, "Huggy", msg.msg.trim())
     }
-    if (msg.startsWith("Octo")) {
+    if (msg.model == "Octo") {
         modelUrl = "http://" + taiapi + ":9000/engines/octo-onnx-gpt-2/completions"
-        getPredictedText(io, modelUrl, "Octo", msg.slice(5).trim())
+        getPredictedText(io, modelUrl, "Octo", msg.msg.trim())
     }
-    if (msg.startsWith("Oni")) {
+    if (msg.model == "Oni") {
         modelUrl = "http://" + taiapi + ":9000/engines/onnx-gpt-2/completions"
-        getPredictedText(io, modelUrl, "Oni", msg.slice(4).trim())
+        getPredictedText(io, modelUrl, "Oni", msg.msg.trim())
     }
   });
 });
@@ -43,7 +43,7 @@ function getPredictedText(io, modelUrl, name, prompt) {
       console.log(text, response.headers['x-process-time']);
       text += ` (in ${parseFloat(response.headers['x-process-time']).toFixed(4)}s)`
 
-      io.emit('chat message', name + " has generated" + text )
+      io.emit('gen text', {msg: name + " has generated " + text })
     })
     .catch(function (error) {
       console.log(error);
