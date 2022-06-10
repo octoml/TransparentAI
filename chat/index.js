@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
 
 function getPredictedText(io, modelUrl, name, prompt) {
   axios.post(modelUrl, {
-      prompt: "hey nerd"
+      prompt: prompt
     })
     .then(function(response) {
       // Idk why these aren't unified
