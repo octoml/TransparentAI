@@ -2,6 +2,8 @@
 #
 
 imageRegistry := "images.octoml.ai"
+export OCTOML_AGREE_TO_TERMS := "1"
+
 
 # List tasks
 default:
@@ -36,10 +38,10 @@ docker-build:
 	[ -f models/onnx_models/gpt2-lm-head-10.onnx ] || wget https://github.com/onnx/models/raw/main/text/machine_comprehension/gpt-2/model/gpt2-lm-head-10.onnx -P models/onnx_models
 	rm -fr .octoml_cache
 	cd models/onnx_models && octoml clean -a
-	docker rmi gpt2-lm-head-10 || true
+	docker rmi gpt2-lm-head-10-local || true
 	cd models/onnx_models && octoml package
-	docker tag gpt2-lm-head-10 transparent-ai/gpt2-lm-head-10
-	docker tag gpt2-lm-head-10 {{imageRegistry}}/gpt2
+	docker tag gpt2-lm-head-10-local transparent-ai/gpt2-lm-head-10
+	docker tag gpt2-lm-head-10-local {{imageRegistry}}/gpt2
 
 	mkdir -p tai-api/models/onnx_models
 	cp models/onnx_models/gpt2-lm-head-10.onnx tai-api/models/onnx_models/
