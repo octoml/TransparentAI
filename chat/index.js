@@ -10,21 +10,21 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  io.emit('chat message', "Welcome to chat! We have 3 bots for you to chat with, Huggy, Octo, and Oni(onnx). Try it out with 'Huggy: Tell me a story'")
+  io.emit('chat message', "Welcome to chat! We have 3 bots for you to chat with, Huggy, Octo, and Oni(onnx). Try it out with 'Huggy: I was once walking down the street and'")
   socket.on('chat message', msg => {
     console.log(msg);
     io.emit('chat message', msg);
     if (msg.startsWith("Huggy")) {
         modelUrl = "http://" + taiapi + ":9000/engines/hf-gpt-2/completions"
-        getPredictedText(io, modelUrl, "Huggy", msg.slice(5,-1).trim())
+        getPredictedText(io, modelUrl, "Huggy", msg.slice(5).trim())
     }
     if (msg.startsWith("Octo")) {
         modelUrl = "http://" + taiapi + ":9000/engines/octo-onnx-gpt-2/completions"
-        getPredictedText(io, modelUrl, "Octo", msg.slice(5,-1).trim())
+        getPredictedText(io, modelUrl, "Octo", msg.slice(5).trim())
     }
     if (msg.startsWith("Oni")) {
         modelUrl = "http://" + taiapi + ":9000/engines/onnx-gpt-2/completions"
-        getPredictedText(io, modelUrl, "Oni", msg.slice(4,-1).trim())
+        getPredictedText(io, modelUrl, "Oni", msg.slice(4).trim())
     }
   });
 });
@@ -43,7 +43,7 @@ function getPredictedText(io, modelUrl, name, prompt) {
       console.log(text, response.headers['x-process-time']);
       text += ` (in ${parseFloat(response.headers['x-process-time']).toFixed(4)}s)`
 
-      io.emit('chat message', name + " says: " + text )
+      io.emit('chat message', name + " has generated" + text )
     })
     .catch(function (error) {
       console.log(error);
