@@ -4,8 +4,10 @@ import sys
 
 prompt = " ".join(sys.argv[1:])
 
-print("submitting:", prompt)
+print("Submitting:", prompt)
 
 payload = {"prompt": prompt}
 r = requests.post("http://localhost:9000/engines/hf-gpt-2/completions", json=payload)
-print(r.json()['response'][0]['generated_text'])
+
+print("Generated Text:", r.json()['response'][0]['generated_text'])
+print("Time for request: {:.3f} s".format(float(r.headers['x-process-time'])))
