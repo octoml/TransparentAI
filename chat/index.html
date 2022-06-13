@@ -7,6 +7,7 @@
 
       #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
       #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #model { border: none; padding: 0 1rem; flex-grow: 1;  margin: 0.25rem; }
       #input:focus { outline: none; }
       #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
 
@@ -18,7 +19,13 @@
   <body>
     <ul id="messages"></ul>
     <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
+      <input id="input" autocomplete="off" />
+      <select id="model"  multiple>
+        <option selected="selected" value="Huggy">Huggy</option>
+        <option value="Octo">Octo</option>
+        <option value="Oni">Oni</option>
+      </select>
+      <button>Generate Text</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
 
@@ -32,14 +39,16 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-          socket.emit('chat message', input.value);
+          console.log('gen text', {msg: input.value, model: model.value});
+          socket.emit('gen text', {msg: input.value, model: model.value});
           input.value = '';
         }
       });
 
-      socket.on('chat message', function(msg) {
+      socket.on('gen text', function(msg) {
         var item = document.createElement('li');
-        item.textContent = msg;
+        item.textContent = msg.msg;
+        console.log(msg);
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
