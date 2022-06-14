@@ -39,22 +39,23 @@ docker-build:
 	echo OctoML model server [gpt]
 	[ -f models/onnx_models/gpt2-lm-head-10.onnx ] || wget https://github.com/onnx/models/raw/main/text/machine_comprehension/gpt-2/model/gpt2-lm-head-10.onnx -P models/onnx_models
 	rm -fr .octoml_cache
-	cd models/onnx_models && octoml clean -a
-	docker rmi magenta_arbitrary-image-stylization-v1-256_2.tar-local || true
-	cd models/tensorflow_models && octoml package
-	docker tag magenta_arbitrary-image-stylization-v1-256_2.tar-local transparent-ai/style
-	docker tag magenta_arbitrary-image-stylization-v1-256_2.tar-local {{imageRegistry}}/style
+	cd models/onnx_models && octoml clean -c
+	docker rmi gpt2-lm-head-10-local || true
+	cd models/onnx_models && octoml package -i
+	docker tag gpt2-lm-head-10-local transparent-ai/gpt2-lm-head-10
+	docker tag gpt2-lm-head-10-local {{imageRegistry}}/gpt2
 
 	echo OctoML model server [style]
 	rm -fr .octoml_cache
 	[ -f models/tensorflow_models/magenta_arbitrary-image-stylization-v1-256_2.tar.gz ] || wget https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2?tf-hub-format=compressed -O models/tensorflow_models/magenta_arbitrary-image-stylization-v1-256_2.tar.gz
-	cd models/tensorflow_models && octoml clean -a && rm -fr .octoml_cache
-	docker rmi gpt2-lm-head-10-local || true
-	cd models/onnx_models && octoml package
-	docker tag gpt2-lm-head-10-local transparent-ai/gpt2-lm-head-10
-	docker tag gpt2-lm-head-10-local {{imageRegistry}}/gpt2
+	cd models/tensorflow_models && octoml clean -c && rm -fr .octoml_cache
+	docker rmi magenta_arbitrary-image-stylization-v1-256_2-local || true
+	cd models/tensorflow_models && octoml package -i
+	docker tag magenta_arbitrary-image-stylization-v1-256_2-local transparent-ai/style
+	docker tag magenta_arbitrary-image-stylization-v1-256_2-local {{imageRegistry}}/style
 
 
+	echo ML API Server
 	mkdir -p tai-api/models/onnx_models
 	cp models/onnx_models/gpt2-lm-head-10.onnx tai-api/models/onnx_models/
 	echo python api server
@@ -66,6 +67,7 @@ push:
 	docker push {{imageRegistry}}/tai-api
 	docker push {{imageRegistry}}/chat
 	docker push {{imageRegistry}}/gpt2
+	docker push {{imageRegistry}}/style
 
 # up localdev
 compose-up:
