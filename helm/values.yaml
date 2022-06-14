@@ -1,16 +1,22 @@
 # Number of replicas for the Deployment
 replicas:
-  gpt2:   1
+  imagefrontend:  1
   chat:   1
   taiapi: 1
+  style:  1
+  gpt2:   1
 
 
 # Ports
+imagefrontend:  8888
 chatPort:       3000
+taiapiPort:     9000
 gpt2HttpPort:   8000
 gpt2GrpcPort:   8001
 gpt2PromPort:   8002
-taiapiPort:     9000
+styleHttpPort:   8000
+styleGrpcPort:   8001
+stylePromPort:   8002
 
 
 # Full path (url) to the image and the tag to use
@@ -19,11 +25,17 @@ images:
   chat:
     name: chat
     tag: latest
-  gpt2:
-    name: gpt2
+  imagefrontend:
+    name: imagefrontend
     tag: latest
   taiapi:
     name: tai-api
+    tag: latest
+  gpt2:
+    name: gpt2
+    tag: latest
+  style:
+    name: style
     tag: latest
 
 # Hostname for the ingress
@@ -37,18 +49,29 @@ tolerations: []
 #   value: "aws-c6g.large"
 #   effect: "NoSchedule"
 
-nodeSelector: {}
+models:
+  gpt2:
+    nodeSelector:
+      node.kubernetes.io/instance-type: "g4dn.2xlarge"
+    requests:
+      limits:
+        nvidia.com/gpu: 1
+  style:
+    nodeSelector:
+      node.kubernetes.io/instance-type: "g4dn.2xlarge"
+    requests:
+      limits:
+        nvidia.com/gpu: 1
 ## If you want to set node selector, delete the `{}` in the line above
 ## and uncomment/fill in this example block
 #  octoml.ai/octomizer-platform: "aws-c6g.large"
 #  label-key: "label-value"
 
-
 prometheus:
   enabled: true
   metricsPort: 8002
   serviceMonitor:
-    enabled: true
+    enabled: false
     prometheusInstance: default
     labels: {}
     honorLabels: false
