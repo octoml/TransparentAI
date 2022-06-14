@@ -14,6 +14,7 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
+      .warn { background: rgb(255, 128, 0) !important; font-weight: bold; }
     </style>
   </head>
   <body>
@@ -47,8 +48,18 @@
 
       socket.on('gen text', function(msg) {
         var item = document.createElement('li');
-        item.textContent = msg.msg;
-        console.log(msg);
+        var chatText;
+        if (msg.processTime) {
+          timeString = ` (in ${msg.processTime.toFixed(4)}s)`;
+          chatText = msg.msg + timeString;
+          if (msg.processTime > 2) {
+            item.classList.add("warn");
+          }
+        } else {
+          chatText = msg.msg;
+        }
+        console.log(chatText);
+        item.textContent = chatText;
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });

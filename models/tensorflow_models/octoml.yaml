@@ -1,0 +1,20 @@
+---
+models:
+  magenta_arbitrary-image-stylization-v1-256_2:
+    path: magenta_arbitrary-image-stylization-v1-256_2.tar.gz
+    inputs:
+      "placeholder:0":
+        shape:
+          - 1
+          - 256
+          - 256
+          - 3
+        dtype: fp32
+      "placeholder_1:0":
+        shape:
+          - 1
+          - 256
+          - 256
+          - 3
+        dtype: fp32
+    type: tensorflowsavedmodel

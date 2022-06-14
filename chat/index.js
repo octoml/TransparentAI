@@ -41,9 +41,9 @@ function getPredictedText(io, modelUrl, name, prompt) {
           text = response.data.response
       }
       console.log(text, response.headers['x-process-time']);
-      text += ` (in ${parseFloat(response.headers['x-process-time']).toFixed(4)}s)`
+      processTime = parseFloat(response.headers['x-process-time']);
 
-      io.emit('gen text', {msg: name + " has generated " + text })
+      io.emit('gen text', {msg: name + " has generated " + text, processTime: processTime })
     })
     .catch(function (error) {
       console.log(error);

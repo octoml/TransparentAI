@@ -136,3 +136,5 @@ models/**/*.onnx
 *.octoml_cache
 node_modules
 tai-api/models/
+models/tensorflow_models/magenta_arbitrary-image-stylization-v1-256_2.tar.gz
+*.tar.gz

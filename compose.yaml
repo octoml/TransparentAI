@@ -1,5 +1,11 @@
 version: "3.9"
 services:
+  chat:
+    image: transparent-ai/chat
+    environment:
+      TAI_API_HOST: taiapi # TODO: better service discoverdy
+    ports:
+      - "3000:3000"
   taiapi:
     image: transparent-ai/tai-api
     environment:
@@ -7,15 +13,12 @@ services:
     ports:
       - "9000:9000"
   gpt2:
-    image: transparent-ai/gpt2-lm-head-10
+    image: transparent-ai/gpt2-lm-head-10-local
+    command: tritonserver --model-repository=octoml/models --strict-model-config=false
+  style:
+    image: transparent-ai/style
     ports:
       - "8000:8000"
       - "8001:8001"
       - "8002:8002"
     command: tritonserver --model-repository=octoml/models --strict-model-config=false
-  chat:
-    image: transparent-ai/chat
-    environment:
-      TAI_API_HOST: taiapi # TODO: better service discoverdy
-    ports:
-      - "3000:3000"
