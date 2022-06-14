@@ -17,11 +17,12 @@ dev:
 
 # Setup to run the application locally.
 setup:
-	pip install -r requirements.txt
+	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+	pip install -r tai-api/requirements.txt
 	mkdir -p models/onnx_models
 	mkdir -p tai-api/models/onnx_models
 	[ -f models/onnx_models/gpt2-lm-head-10.onnx ] || wget https://github.com/onnx/models/raw/main/text/machine_comprehension/gpt-2/model/gpt2-lm-head-10.onnx -P models/onnx_models
-	[ -f tai-api/models/onnx_models/gpt2-lm-head-10.onnx ] || wget https://github.com/onnx/models/raw/main/text/machine_comprehension/gpt-2/model/gpt2-lm-head-10.onnx -P tai-api/models/onnx_models
+	[ -f tai-api/models/onnx_models/gpt2-lm-head-10.onnx ] || cp  models/onnx_models/gpt2-lm-head-10.onnx tai-api/models/onnx_models/gpt2-lm-head-10.onnx
 
 # Export Transformer Models
 export:
