@@ -42,7 +42,7 @@ docker-build:
 	cd models/onnx_models && octoml clean -c
 	docker rmi gpt2-lm-head-10-local || true
 	cd models/onnx_models && octoml package -i
-	docker tag gpt2-lm-head-10-local transparent-ai/gpt2-lm-head-10
+	docker tag gpt2-lm-head-10-local transparent-ai/gpt2-lm-head-10-local
 	docker tag gpt2-lm-head-10-local {{imageRegistry}}/gpt2
 
 	echo OctoML model server [style]
