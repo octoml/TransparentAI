@@ -1,0 +1,15 @@
+---
+models:
+  gpt2-lm-head-10:
+    path: ../gpt2-lm-head-10.onnx
+    hardware:
+      - aws_m6g.4xlarge
+      - skylake_8
+    inputs:
+      input1:
+        shape:
+          - 1
+          - 1
+          - 1
+        dtype: int64
+    type: onnx
