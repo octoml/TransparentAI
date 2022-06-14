@@ -1,17 +1,19 @@
 ---
 models:
-  magenta_arbitrary-image-stylization-v1-256_2.tar:
+  magenta_arbitrary-image-stylization-v1-256_2:
     path: ../magenta_arbitrary-image-stylization-v1-256_2.tar.gz
     hardware:
-      - aws_m6g.16xlarge
-      - aws_m6g.12xlarge
-      - aws_m6g.8xlarge
+      - skylake_8
       - aws_m6g.4xlarge
-      - aws_t4g.2xlarge
-      - rasp4b
       - jetson_agx #(NVIDIA Jetson (OctoML Jetson AGX Xavier))
-      - jetson_nano #(NVIDIA Jetson (OctoML Jetson Nano))
-      - jetson_nx #(NVIDIA Jetson (OctoML Jetson Xavier NX))
+        #- aws_m6g.16xlarge
+        #- aws_m6g.12xlarge
+        #- aws_m6g.8xlarge
+        #- aws_t4g.2xlarge
+        #- rasp4b
+        #- jetson_agx #(NVIDIA Jetson (OctoML Jetson AGX Xavier))
+        #- jetson_nano #(NVIDIA Jetson (OctoML Jetson Nano))
+        #- jetson_nx #(NVIDIA Jetson (OctoML Jetson Xavier NX))
     inputs:
       "placeholder:0":
         shape:
