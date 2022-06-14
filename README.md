@@ -49,10 +49,11 @@ We have the following structure:
 For local pacakging for the model you can `cd` to e.g.
 `models/onnx_models` and run `octoml package`.
 
-For express packaging do the same as local but use `octoml package -e`
 
 To do full acceleration with hardware `cd` to
 `models/onnx_models/acceleration` and run `octoml package -a.`
+
+For express packaging(much faster) do the same as full but use `octoml package -e`
 
 
 ## k8s
