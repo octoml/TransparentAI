@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-chat
+        octoml.ai/inference: triton
     spec:
       containers:
       - name: {{ .Release.Name }}-chat
@@ -45,7 +46,7 @@ metadata:
   annotations:
     prometheus.io/path: "/metrics"
     prometheus.io/scrape: 'true'
-    prometheus.io/port: {{ .Values.gpt2PromPort }}
+    prometheus.io/port: "{{ .Values.gpt2PromPort }}"
 spec:
   replicas: {{ .Values.replicas.gpt2 }}
   selector:

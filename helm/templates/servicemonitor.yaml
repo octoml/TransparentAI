@@ -4,16 +4,16 @@ metadata:
   name: {{ .Release.Name }}-gpt2
   namespace: monitoring
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Release.Name }}-gpt2
     prometheus: {{ .Values.prometheus.serviceMonitor.prometheusInstance }}
     {{- with .Values.prometheus.serviceMonitor.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  jobLabel: {{ .Release.Name }}
+  jobLabel: {{ .Release.Name }}-gpt2
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: {{ .Release.Name }}-gpt2
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}

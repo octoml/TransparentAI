@@ -48,7 +48,7 @@ prometheus:
   enabled: true
   metricsPort: 8002
   serviceMonitor:
-    enabled: false
+    enabled: true
     prometheusInstance: default
     labels: {}
     honorLabels: false
