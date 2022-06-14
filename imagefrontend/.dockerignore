@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# OS Specific exclusions
-.DS_Store
-
 # C extensions
 *.so
 
@@ -143,3 +140,4 @@ models/tensorflow_models/magenta_arbitrary-image-stylization-v1-256_2.tar.gz
 *.tar.gz
 flagged/*
 venv
+Dockerfile

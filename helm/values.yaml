@@ -43,3 +43,12 @@ nodeSelector: {}
 #  octoml.ai/octomizer-platform: "aws-c6g.large"
 #  label-key: "label-value"
 
+
+prometheus:
+  enabled: true
+  metricsPort: 8002
+  serviceMonitor:
+    enabled: true
+    prometheusInstance: default
+    labels: {}
+    honorLabels: false

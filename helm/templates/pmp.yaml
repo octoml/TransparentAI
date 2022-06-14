@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: tai-metrics
+  namespace: monitoring
+  labels:
+    app: tai
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      octoml.ai/inference: triton
+  namespaceSelector:
+    any: true
+  podMetricsEndpoints:
+  - path: "/metrics"
+    port: metrics

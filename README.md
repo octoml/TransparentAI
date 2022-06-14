@@ -26,6 +26,36 @@ octoml deploy
 ```
 
 
+# OctoML Packaging
+
+How to package
+
+We have the following structure:
+
+```
+/models
+  /tensorflow_models
+    /style_model.tar.gz
+    /octoml.yaml
+    /accelerated
+      /octoml.yaml
+  /onnx_models
+    /gpt_model.onnx
+    /octoml.yaml
+    /accelerated
+      /octoml.yaml
+```
+
+For local pacakging for the model you can `cd` to e.g.
+`models/onnx_models` and run `octoml package`.
+
+
+To do full acceleration with hardware `cd` to
+`models/onnx_models/acceleration` and run `octoml package -a.`
+
+For express packaging(much faster) do the same as full but use `octoml package -e`
+
+
 ## k8s
 
 Build and push images to a custom repo. (Push can take 5 minutes)
