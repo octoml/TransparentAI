@@ -8,7 +8,7 @@ replicas:
 
 
 # Ports
-imagefrontend:  8888
+imagefrontendPort:  8888
 chatPort:       3000
 taiapiPort:     9000
 gpt2HttpPort:   8000
@@ -53,15 +53,17 @@ models:
   gpt2:
     nodeSelector:
       node.kubernetes.io/instance-type: "g4dn.2xlarge"
-    requests:
-      limits:
-        nvidia.com/gpu: 1
+      #    resources:
+      #      limits:
+        #        nvidia.com/gpu: 1 # requesting 1 GPU
   style:
     nodeSelector:
       node.kubernetes.io/instance-type: "g4dn.2xlarge"
-    requests:
-      limits:
-        nvidia.com/gpu: 1
+      #    resources:
+      #      limits:
+        #        nvidia.com/gpu: 1 # requesting 1 GPU
+
+
 ## If you want to set node selector, delete the `{}` in the line above
 ## and uncomment/fill in this example block
 #  octoml.ai/octomizer-platform: "aws-c6g.large"
@@ -75,3 +77,4 @@ prometheus:
     prometheusInstance: default
     labels: {}
     honorLabels: false
+

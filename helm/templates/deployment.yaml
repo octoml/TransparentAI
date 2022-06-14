@@ -94,7 +94,7 @@ spec:
           requests:
             memory: "4Gi"
             ephemeral-storage: "8Gi"
-            cpu: "8"
+            cpu: "4"
         livenessProbe:
           httpGet:
             path: /healthz
@@ -145,6 +145,10 @@ spec:
         - containerPort: {{ .Values.gpt2PromPort}}
           name: metrics
           protocol: TCP
+        {{- if .Values.models.gpt2.resources }}
+        resources:
+  {{ toYaml .Values.models.gpt2.resources | indent 10 }}
+        {{- end }}
       {{- if .Values.models.gpt2.tolerations }}
       tolerations:
 {{ toYaml .Values.models.gpt2tolerations | indent 6 }}
@@ -152,10 +156,6 @@ spec:
       {{- if .Values.models.gpt2.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.models.gpt2.nodeSelector | indent 8 }}
-      {{- end }}
-      {{- if .Values.models.gpt2.requests }}
-      requests:
-{{ toYaml .Values.models.gpt2.requests | indent 8 }}
       {{- end }}
 ---
 apiVersion: apps/v1
@@ -200,6 +200,10 @@ spec:
         - containerPort: {{ .Values.stylePromPort}}
           name: metrics
           protocol: TCP
+        {{- if .Values.models.style.resources}}
+        resources:
+  {{ toYaml .Values.models.style.resources | indent 10 }}
+        {{- end }}
       {{- if .Values.models.style.tolerations }}
       tolerations:
 {{ toYaml .Values.models.style.tolerations | indent 6 }}
@@ -207,9 +211,5 @@ spec:
       {{- if .Values.models.style.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.models.style.nodeSelector | indent 8 }}
-      {{- end }}
-      {{- if .Values.models.style.requests}}
-      requests:
-{{ toYaml .Values.models.style.requests | indent 8 }}
       {{- end }}
 
