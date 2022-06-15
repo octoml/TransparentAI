@@ -1,4 +1,4 @@
-from os import path
+from os import path, getenv
 
 import numpy as np
 from PIL import Image
@@ -30,3 +30,11 @@ model = get_remote_model()
 result = model(image_style_array, image_content_array)
 result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
 result_image.save("styled.jpg")
+if getenv("LOOP"):
+    i = 0
+    while True:
+        i += 1
+        if i % 10 == 0:
+            print("Iteration: ", i)
+        result = model(image_style_array, image_content_array)
+        result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
