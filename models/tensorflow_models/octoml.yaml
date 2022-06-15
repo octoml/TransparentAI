@@ -1,6 +1,6 @@
 ---
 models:
-  magenta_arbitrary-image-stylization-v1-256_2:
+  magenta_image_stylization:
     path: magenta_arbitrary-image-stylization-v1-256_2.tar.gz
     inputs:
       "placeholder:0":
