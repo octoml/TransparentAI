@@ -18,6 +18,7 @@ model = get_remote_model()
 
 @app.post("/stylize/")
 async def generate_image(source_image_file: UploadFile, style_image_file: UploadFile):
+    print("hai")
     source_image = Image.open(source_image_file.file)
     print(source_image.format, source_image.size, source_image.mode)
     source_image_array = image_to_normalized_ndarray(
