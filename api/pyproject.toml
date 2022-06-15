@@ -15,6 +15,7 @@ tritonclient = {extras = ["http", "grpc"], version = "^2.22.3"}
 Pillow = "^9.1.1"
 attrdict = "^2.0.1"
 numpy = "^1.22.4"
+PyYAML = "^6.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
