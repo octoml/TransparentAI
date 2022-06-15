@@ -35,7 +35,7 @@ images:
     name: gpt2
     tag: latest
   style:
-    name: style
+    name: style_g4dn_optimized # this is optimzied, this is not what's made by `just docker-build` this is made by the octoml platform and is 20% faster than tensorflow and 70% fastert han onnx on a t4gpu (g4dn.xlarge)
     tag: latest
 
 # Hostname for the ingress
@@ -53,15 +53,9 @@ models:
   gpt2:
     nodeSelector:
       node.kubernetes.io/instance-type: "g4dn.2xlarge"
-      #    resources:
-      #      limits:
-        #        nvidia.com/gpu: 1 # requesting 1 GPU
   style:
     nodeSelector:
       node.kubernetes.io/instance-type: "g4dn.2xlarge"
-      #    resources:
-      #      limits:
-        #        nvidia.com/gpu: 1 # requesting 1 GPU
 
 
 ## If you want to set node selector, delete the `{}` in the line above
@@ -78,3 +72,19 @@ prometheus:
     labels: {}
     honorLabels: false
 
+# Extra models here are provided to graphically show speed comparisons
+# If you don't trust our web ui
+# we defaul to accelerated on gpu(g4dn.xlarge), so also show unaccelerated on gpu, accelerated on cpu(c5n.xlarge), and unaccelerated on cpu
+# Graviton(m6g.xlarge) got really poor perf so not including it today (2x slower than skylake(c5n.xlarge))
+enableExtraModels: true
+# documentation only:
+#extraModels:
+#  - style-gpu-unaccelerated
+#  - style-cpu-unaccelerated
+#  - style-cpu-accelerated
+
+# images
+# gcr.io/octonaut-skrum/style-gpu-unaccelerated
+# gcr.io/octonaut-skrum/style-cpu-unaccelerated
+# gcr.io/octonaut-skrum/style-gpu-accelerated
+# gcr.io/octonaut-skrum/style-cpu-accelerated

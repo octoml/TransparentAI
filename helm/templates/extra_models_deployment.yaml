@@ -1,0 +1,143 @@
+{{- if .Values.enableExtraModels }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-style-gpu-unaccelerated
+  name: {{ .Release.Name }}-style-gpu-unaccelerated
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    prometheus.io/path: "/metrics"
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: "{{ .Values.stylePromPort }}"
+spec:
+  replicas: {{ .Values.replicas.style }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-style-gpu-unaccelerated
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-style-gpu-unaccelerated
+        octoml.ai/inference: triton
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      containers:
+      - name: {{ .Release.Name }}-style-gpu-unaccelerated
+        imagePullPolicy: Always
+        image: "{{ .Values.imageRegistry }}/style-gpu-unaccelerated"
+        command:
+        - tritonserver
+        args:
+        - --model-repository=octoml/models
+        - --strict-model-config=false
+        ports:
+        - containerPort: {{ .Values.styleHttpPort}}
+          protocol: TCP
+          name: http
+        - containerPort: {{ .Values.styleGrpcPort}}
+          protocol: TCP
+          name: grpc
+        - containerPort: {{ .Values.stylePromPort}}
+          name: metrics
+          protocol: TCP
+        resources:
+          limits:
+            nvidia.com/gpu: 1 # requesting 1 GPU
+      nodeSelector:
+        node.kubernetes.io/instance-type: "g4dn.2xlarge"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-style-cpu-unaccelerated
+  name: {{ .Release.Name }}-style-cpu-unaccelerated
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    prometheus.io/path: "/metrics"
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: "{{ .Values.stylePromPort }}"
+spec:
+  replicas: {{ .Values.replicas.style }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-style-cpu-unaccelerated
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-style-cpu-unaccelerated
+        octoml.ai/inference: triton
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      containers:
+      - name: {{ .Release.Name }}-style-cpu-unaccelerated
+        imagePullPolicy: Always
+        image: "{{ .Values.imageRegistry }}/style-cpu-unaccelerated"
+        command:
+        - tritonserver
+        args:
+        - --model-repository=octoml/models
+        - --strict-model-config=false
+        ports:
+        - containerPort: {{ .Values.styleHttpPort}}
+          protocol: TCP
+          name: http
+        - containerPort: {{ .Values.styleGrpcPort}}
+          protocol: TCP
+          name: grpc
+        - containerPort: {{ .Values.stylePromPort}}
+          name: metrics
+          protocol: TCP
+      nodeSelector:
+        node.kubernetes.io/instance-type: "c5n.xlarge"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-style-cpu-accelerated
+  name: {{ .Release.Name }}-style-cpu-accelerated
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    prometheus.io/path: "/metrics"
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: "{{ .Values.stylePromPort }}"
+spec:
+  replicas: {{ .Values.replicas.style }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-style-cpu-accelerated
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-style-cpu-accelerated
+        octoml.ai/inference: triton
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      containers:
+      - name: {{ .Release.Name }}-style-cpu-accelerated
+        imagePullPolicy: Always
+        image: "{{ .Values.imageRegistry }}/style-cpu-accelerated"
+        command:
+        - tritonserver
+        args:
+        - --model-repository=octoml/models
+        - --strict-model-config=false
+        ports:
+        - containerPort: {{ .Values.styleHttpPort}}
+          protocol: TCP
+          name: http
+        - containerPort: {{ .Values.styleGrpcPort}}
+          protocol: TCP
+          name: grpc
+        - containerPort: {{ .Values.stylePromPort}}
+          name: metrics
+          protocol: TCP
+      nodeSelector:
+        node.kubernetes.io/instance-type: "c5n.xlarge"
+{{- end }}
