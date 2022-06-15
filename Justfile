@@ -86,7 +86,7 @@ compose-down:
 
 # install helm chart for the first time
 helm-install
-	echo did you create the pull-secret? See readme
+	echo "did you create the pull-secret? See readme"
 	cd helm
 	helm install transparentai . -n transparentai
 
