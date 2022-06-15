@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tai-cannon
+  name: tai-cannon
+  namespace: transparentai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tai-cannon
+  template:
+    metadata:
+      labels:
+        app: tai-cannon
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      containers:
+      - name: tai-cannon-1
+        imagePullPolicy: Always
+        image: gcr.io/octonaut-skrum/api
+        command: ["python"]
+        args: ["test.py"]
+        env:
+        - name: LOOP
+          value: "1"
+        - name: MODEL_ENDPOINT
+          value: "transparentai-style-cpu-accelerated:8000"
+        - name: MODEL_NAME
+          value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
+      - name: tai-cannon-2
+        imagePullPolicy: Always
+        image: gcr.io/octonaut-skrum/api
+        command: ["python"]
+        args: ["test.py"]
+        env:
+        - name: LOOP
+          value: "1"
+        - name: MODEL_ENDPOINT
+          value: "transparentai-style-cpu-unaccelerated:8000"
+        - name: MODEL_NAME
+          value: "magenta_arbitrary-image-stylization-v1"
