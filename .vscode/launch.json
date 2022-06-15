@@ -18,13 +18,22 @@
             "justMyCode": false
         },
         {
-            "name": "Python: Current File",
+            "name": "Python: API Current File",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": false,
             "cwd": "${workspaceFolder}/api",
+        },
+        {
+            "name": "Python: Frontend",
+            "type": "python",
+            "request": "launch",
+            "program": "run.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/imagefrontend",
         },
     ]
 }
