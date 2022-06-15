@@ -51,11 +51,10 @@ docker-build:
 	rm -fr .octoml_cache
 	[ -f models/tensorflow_models/magenta_arbitrary-image-stylization-v1-256_2.tar.gz ] || wget https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2?tf-hub-format=compressed -O models/tensorflow_models/magenta_arbitrary-image-stylization-v1-256_2.tar.gz
 	cd models/tensorflow_models && octoml clean -c && rm -fr .octoml_cache
-	docker rmi magenta_arbitrary-image-stylization-v1-256_2-local || true
+	docker rmi magenta_image_stylization || true
 	cd models/tensorflow_models && octoml package -i
-	docker tag magenta_arbitrary-image-stylization-v1-256_2-local transparent-ai/style
-	docker tag magenta_arbitrary-image-stylization-v1-256_2-local {{imageRegistry}}/style
-
+	docker tag magenta_image_stylization transparent-ai/style
+	docker tag magenta_image_stylization {{imageRegistry}}/style
 
 	echo ML API Server
 	mkdir -p tai-api/models/onnx_models
