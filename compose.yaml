@@ -1,12 +1,12 @@
 version: "3.9"
 services:
-  chat:
+  chat: #YOUR APP
     image: transparent-ai/chat
     environment:
       TAI_API_HOST: taiapi # TODO: better service discoverdy
     ports:
       - "3000:3000"
-  taiapi:
+  taiapi: # PREPROCESSING
     image: transparent-ai/tai-api
     environment:
       OCTO_HOST: gpt2 # TODO: better service discovery
@@ -15,7 +15,7 @@ services:
   gpt2:
     image: transparent-ai/gpt2-lm-head-10-local
     command: tritonserver --model-repository=octoml/models --strict-model-config=false
-  style:
+  style: # MODEL wrapped in triton/octoml
     image: transparent-ai/style
     ports:
       - "8000:8000"

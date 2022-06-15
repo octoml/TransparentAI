@@ -1,82 +1,9 @@
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}
-  namespace: {{ .Release.Namespace }}
-spec:
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: {{ .Values.chatPort }}
-  selector:
-    app: {{ .Release.Name }}-chat
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}-taiapi
-  namespace: {{ .Release.Namespace }}
-spec:
-  ports:
-  - name: http
-    port: {{ .Values.taiapiPort }}
-    protocol: TCP
-    targetPort: {{ .Values.taiapiPort }}
-  selector:
-    app: {{ .Release.Name }}-taiapi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}-gpt2
-  namespace: {{ .Release.Namespace }}
-spec:
-  ports:
-  - name: http
-    port: {{ .Values.gpt2HttpPort}}
-    protocol: TCP
-    targetPort: {{ .Values.gpt2HttpPort}}
-  - name: grpc
-    port: {{ .Values.gpt2GrpcPort}}
-    protocol: TCP
-    targetPort: {{ .Values.gpt2GrpcPort}}
-  - name:  metrics
-    port: {{ .Values.gpt2PromPort}}
-    protocol: TCP
-    targetPort: {{ .Values.gpt2PromPort}}
-  selector:
-    app: {{ .Release.Name }}-gpt2
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Release.Name }}-style
-  namespace: {{ .Release.Namespace }}
-spec:
-  ports:
-  - name: http
-    port: {{ .Values.styleHttpPort}}
-    protocol: TCP
-    targetPort: {{ .Values.styleHttpPort}}
-  - name: grpc
-    port: {{ .Values.styleGrpcPort}}
-    protocol: TCP
-    targetPort: {{ .Values.styleGrpcPort}}
-  - name:  metrics
-    port: {{ .Values.stylePromPort}}
-    protocol: TCP
-    targetPort: {{ .Values.stylePromPort}}
-  selector:
-    app: {{ .Release.Name }}-style
-
 {{- if .Values.enableExtraModels }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-style-gpu-accelerated
+  name: {{ .Release.Name }}-style-gpu-unaccelerated
   namespace: {{ .Release.Namespace }}
 spec:
   ports:
@@ -93,5 +20,49 @@ spec:
     protocol: TCP
     targetPort: {{ .Values.stylePromPort}}
   selector:
-    app: {{ .Release.Name }}-style
+    app: {{ .Release.Name }}-style-gpu-unaccelerated
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-style-cpu-unaccelerated
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: http
+    port: {{ .Values.styleHttpPort}}
+    protocol: TCP
+    targetPort: {{ .Values.styleHttpPort}}
+  - name: grpc
+    port: {{ .Values.styleGrpcPort}}
+    protocol: TCP
+    targetPort: {{ .Values.styleGrpcPort}}
+  - name:  metrics
+    port: {{ .Values.stylePromPort}}
+    protocol: TCP
+    targetPort: {{ .Values.stylePromPort}}
+  selector:
+    app: {{ .Release.Name }}-style-cpu-unaccelerated
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-style-cpu-accelerated
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: http
+    port: {{ .Values.styleHttpPort}}
+    protocol: TCP
+    targetPort: {{ .Values.styleHttpPort}}
+  - name: grpc
+    port: {{ .Values.styleGrpcPort}}
+    protocol: TCP
+    targetPort: {{ .Values.styleGrpcPort}}
+  - name:  metrics
+    port: {{ .Values.stylePromPort}}
+    protocol: TCP
+    targetPort: {{ .Values.stylePromPort}}
+  selector:
+    app: {{ .Release.Name }}-style-cpu-accelerated
 {{- end }}

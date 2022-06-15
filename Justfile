@@ -36,7 +36,7 @@ docker-build:
 
 	echo Image Frontend
 	cd imagefrontend && docker build -t transparent-ai/imagefrontend .
-	docker tag transparent-ai/chat {{imageRegistry}}/imagefrontend
+	docker tag transparent-ai/imagefrontend {{imageRegistry}}/imagefrontend
 
 	echo OctoML model server [gpt]
 	[ -f models/onnx_models/gpt2-lm-head-10.onnx ] || wget https://github.com/onnx/models/raw/main/text/machine_comprehension/gpt-2/model/gpt2-lm-head-10.onnx -P models/onnx_models
@@ -56,6 +56,10 @@ docker-build:
 	docker tag magenta_image_stylization-local transparent-ai/style
 	docker tag magenta_image_stylization-local {{imageRegistry}}/style
 
+	echo Pre/Post Proc API Server
+	cd api && docker build --no-cache -t transparent-ai/api .
+	docker tag transparent-ai/api {{imageRegistry}}/api
+
 	echo ML API Server
 	mkdir -p tai-api/models/onnx_models
 	cp models/onnx_models/gpt2-lm-head-10.onnx tai-api/models/onnx_models/
@@ -63,9 +67,10 @@ docker-build:
 	cd tai-api && docker build -t transparent-ai/tai-api .
 	docker tag transparent-ai/tai-api {{imageRegistry}}/tai-api
 
-# push images to registry 
-push: docker-build
+# push images to registry
+push:
 	docker push {{imageRegistry}}/tai-api
+	docker push {{imageRegistry}}/api
 	docker push {{imageRegistry}}/chat
 	docker push {{imageRegistry}}/gpt2
 	docker push {{imageRegistry}}/style
@@ -78,3 +83,13 @@ compose-up:
 # down localdev
 compose-down:
 	docker-compose down
+
+# install helm chart for the first time
+helm-install:
+	echo "did you create the pull-secret? See readme"
+	cd helm && helm install transparentai . -n transparentai
+
+# sync helm files with deployment
+helm-upgrade:
+	echo "upgradin"
+	cd helm && helm upgrade transparentai . -n transparentai

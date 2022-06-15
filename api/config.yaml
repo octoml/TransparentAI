@@ -1,7 +1,8 @@
 endpoints:
   # cpu_in_proc:
   # gpu_in_proc:
-  cpu_normal: !env MODEL_CPU_NORMAL_URL http://host.docker.internal:8000
+  # cpu_normal: !env MODEL_CPU_NORMAL_URL http://host.docker.internal:8000
+  cpu_normal: !env MODEL_ENDPOINT http://host.docker.internal:8000
   cpu_optimized: !env MODEL_CPU_OPTIMIZED_URL http://host.docker.internal:8000
   gpu_normal: !env MODEL_GPU_NORMAL_URL http://host.docker.internal:8000
   gpu_optimized: !env MODEL_GPU_OPTIMIZED_URL http://host.docker.internal:8000

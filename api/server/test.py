@@ -1,4 +1,4 @@
-from os import path
+from os import getenv, path
 
 import numpy as np
 from PIL import Image
@@ -28,6 +28,7 @@ image_content_array = image_to_normalized_ndarray(
     )
 )
 
+
 image_style_file = path.join(image_base_path, "Style_Kanagawa.jpg")
 image_style_array = image_to_normalized_ndarray(
     image_crop_center(
@@ -39,3 +40,11 @@ model = get_remote_model()
 result = model(image_style_array, image_content_array)
 result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
 result_image.save("styled.jpg")
+if getenv("LOOP"):
+    i = 0
+    while True:
+        i += 1
+        if i % 10 == 0:
+            print("Iteration: ", i)
+        result = model(image_style_array, image_content_array)
+        result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
