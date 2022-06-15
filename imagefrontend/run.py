@@ -7,6 +7,7 @@ import os
 
 API_HOST = os.getenv("API_HOST", "localhost")
 API_PORT = os.getenv("API_PORT", 8050)
+STYLE_IMAGE = os.getenv("STYLE_IMAGE", "Style_Kanagawa.jpg")
 
 
 examples = [
@@ -18,6 +19,7 @@ examples = [
 def segment(image):
     print("IM SEGMENTING")
     url = "http://{}:{}/stylize/".format(API_HOST, API_PORT)
+    print(url)
 
     headers = {
         "accept": "application/json",
@@ -33,7 +35,7 @@ def segment(image):
     #    f.write(byte_io)
     files = [
         ("source_image_file", ("imput_from_gradio.jpg", byte_io.getvalue(), 'image/jpeg')),
-        ("style_image_file", ("Style_Kanagawa.jpg", open("Style_Kanagawa.jpg", "rb"), 'image/jpeg')),
+        ("style_image_file", (STYLE_IMAGE, open(STYLE_IMAGE, "rb"), 'image/jpeg')),
     ]
 
     req = requests.post(url, files=files)
@@ -45,4 +47,7 @@ def segment(image):
 
 if __name__ == "__main__":
     gr.close_all()
-    gr.Interface(fn=segment, inputs="image", outputs="image", examples=examples).launch(server_name="0.0.0.0", server_port=8888, debug=True, prevent_thread_lock=True)
+    try:
+        gr.Interface(fn=segment, inputs="image", outputs="image", examples=examples).launch(server_name="0.0.0.0", server_port=8888, debug=True, prevent_thread_lock=True)
+    finally:
+        gr.close_all()
