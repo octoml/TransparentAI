@@ -1,4 +1,4 @@
-from os import path, getenv
+from os import getenv, path
 
 import numpy as np
 from PIL import Image
@@ -27,6 +27,7 @@ image_content_array = image_to_normalized_ndarray(
         Image.open(image_content_file), MODEL_IMAGE_WIDTH, MODEL_IMAGE_HEIGHT
     )
 )
+
 
 image_style_file = path.join(image_base_path, "Style_Kanagawa.jpg")
 image_style_array = image_to_normalized_ndarray(
