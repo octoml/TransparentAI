@@ -146,10 +146,9 @@ spec:
         - containerPort: {{ .Values.gpt2PromPort}}
           name: metrics
           protocol: TCP
-        {{- if .Values.models.gpt2.resources }}
         resources:
-  {{ toYaml .Values.models.gpt2.resources | indent 10 }}
-        {{- end }}
+          limits:
+            nvidia.com/gpu: 1 # requesting 1 GPU
       {{- if .Values.models.gpt2.tolerations }}
       tolerations:
 {{ toYaml .Values.models.gpt2tolerations | indent 6 }}
@@ -202,10 +201,9 @@ spec:
         - containerPort: {{ .Values.stylePromPort}}
           name: metrics
           protocol: TCP
-        {{- if .Values.models.style.resources}}
         resources:
-  {{ toYaml .Values.models.style.resources | indent 10 }}
-        {{- end }}
+          limits:
+            nvidia.com/gpu: 1 # requesting 1 GPU
       {{- if .Values.models.style.tolerations }}
       tolerations:
 {{ toYaml .Values.models.style.tolerations | indent 6 }}
