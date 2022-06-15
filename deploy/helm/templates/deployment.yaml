@@ -26,7 +26,11 @@ spec:
         - name: API_HOST
           value: {{ .Release.Name }}-api
         - name: API_PORT
-          value: {{ .Release.Name }}-api
+          value: "{{ .Values.apiPort }}"
+        - name: STYLE_IMAGE
+          value: "tensor_dog_crop_crop.jpg"
+        - name: PYTHONUNBUFFERED
+          value: "1"
         ports:
         - containerPort: {{ .Values.imagefrontendPort}}
           protocol: TCP
@@ -57,9 +61,11 @@ spec:
         env:
         # Change this to switch models(today)
         - name: MODEL_ENDPOINT
-          value: {{ .Release.Name }}-style:{{ .Values.styleHttpPort}}
+          value: {{ .Release.Name }}-style-cpu-unaccelerated:{{ .Values.styleHttpPort}}
         - name: MODEL_NAME
-          value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
+          value: "magenta_arbitrary-image-stylization-v1"
+          #value: "magenta_arbitrary-image-stylization-v1-256_2"
+          #value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
         ports:
         - containerPort: {{ .Values.apiPort}}
           protocol: TCP
