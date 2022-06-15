@@ -3,7 +3,7 @@ from os import getenv, path
 import numpy as np
 from PIL import Image
 
-from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH, MODEL_NAME
+from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH
 from utils.image import (
     image_crop_center,
     image_from_normalized_ndarray,
@@ -11,8 +11,9 @@ from utils.image import (
 )
 from utils.triton import TritonRemoteModel
 
-MODEL_ENDPOINT = "host.docker.internal:8000"
-MODEL_PROTOCOL = "http"
+MODEL_ENDPOINT = getenv("MODEL_ENDPOINT", "host.docker.internal:8000")
+MODEL_PROTOCOL = getenv("MODEL_PROTOCOL", "http")
+MODEL_NAME = getenv("MODEL_NAME", "magenta_arbitrary-image-stylization-v1")
 
 
 def get_remote_model() -> TritonRemoteModel:
@@ -27,7 +28,6 @@ image_content_array = image_to_normalized_ndarray(
         Image.open(image_content_file), MODEL_IMAGE_WIDTH, MODEL_IMAGE_HEIGHT
     )
 )
-
 
 image_style_file = path.join(image_base_path, "Style_Kanagawa.jpg")
 image_style_array = image_to_normalized_ndarray(
