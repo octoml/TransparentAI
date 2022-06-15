@@ -3,6 +3,10 @@ from io import BytesIO
 import requests
 from PIL import Image
 import numpy as np
+import os
+
+API_HOST = os.getenv("API_HOST", "localhost")
+API_PORT = os.getenv("API_PORT", 8050)
 
 
 examples = [
@@ -13,7 +17,7 @@ examples = [
 
 def segment(image):
     print("IM SEGMENTING")
-    url = "http://localhost:8050/stylize/"
+    url = "http://{}:{}/stylize/".format(API_HOST, API_PORT)
 
     headers = {
         "accept": "application/json",
