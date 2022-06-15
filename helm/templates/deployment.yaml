@@ -15,7 +15,6 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-imagefrontend
-        octoml.ai/inference: triton
     spec:
       imagePullSecrets:
       - name: pull-secret
@@ -24,10 +23,45 @@ spec:
         imagePullPolicy: Always
         image: "{{ .Values.imageRegistry }}/{{ .Values.images.imagefrontend.name}}:{{ .Values.images.imagefrontend.tag }}"
         env:
-        - name: TAI_API_HOST #TODO better service discovery
-          value: {{ .Release.Name }}-taiapi
+        - name: API_HOST
+          value: {{ .Release.Name }}-api
+        - name: API_PORT
+          value: {{ .Release.Name }}-api
         ports:
         - containerPort: {{ .Values.imagefrontendPort}}
+          protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-api
+  name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.api }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-api
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-api
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      containers:
+      - name: {{ .Release.Name }}-api
+        imagePullPolicy: Always
+        image: "{{ .Values.imageRegistry }}/{{ .Values.images.api.name}}:{{ .Values.images.api.tag }}"
+        env:
+        # Change this to switch models(today)
+        - name: MODEL_ENDPOINT
+          value: {{ .Release.Name }}-style:{{ .Values.styleHttpPort}}
+        - name: MODEL_NAME
+          value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
+        ports:
+        - containerPort: {{ .Values.apiPort}}
           protocol: TCP
 ---
 apiVersion: apps/v1
@@ -46,7 +80,6 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-chat
-        octoml.ai/inference: triton
     spec:
       imagePullSecrets:
       - name: pull-secret

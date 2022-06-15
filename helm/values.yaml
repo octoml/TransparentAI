@@ -3,6 +3,7 @@ replicas:
   imagefrontend:  1
   chat:   1
   taiapi: 1
+  api:  1
   style:  1
   gpt2:   1
 
@@ -11,6 +12,7 @@ replicas:
 imagefrontendPort:  8888
 chatPort:       3000
 taiapiPort:     9000
+apiPort:        8050
 gpt2HttpPort:   8000
 gpt2GrpcPort:   8001
 gpt2PromPort:   8002
@@ -30,6 +32,9 @@ images:
     tag: latest
   taiapi:
     name: tai-api
+    tag: latest
+  api:
+    name: api
     tag: latest
   gpt2:
     name: gpt2
