@@ -3,12 +3,21 @@ from os import path
 import numpy as np
 from PIL import Image
 
-from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH, get_remote_model
+from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH, MODEL_NAME
 from utils.image import (
     image_crop_center,
     image_from_normalized_ndarray,
     image_to_normalized_ndarray,
 )
+from utils.triton import TritonRemoteModel
+
+MODEL_ENDPOINT = "host.docker.internal:8000"
+MODEL_PROTOCOL = "http"
+
+
+def get_remote_model() -> TritonRemoteModel:
+    return TritonRemoteModel(MODEL_ENDPOINT, MODEL_NAME, protocol=MODEL_PROTOCOL)
+
 
 image_base_path = path.abspath(path.join(path.dirname(__file__), "../tests/data/"))
 
