@@ -123,6 +123,7 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-gpt2
+        octoml.ai/inference: triton
     spec:
       imagePullSecrets:
       - name: pull-secret
@@ -178,6 +179,7 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-style
+        octoml.ai/inference: triton
     spec:
       imagePullSecrets:
       - name: pull-secret
