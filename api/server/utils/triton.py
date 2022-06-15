@@ -130,7 +130,7 @@ class TritonRemoteModel:
         else:
             if len(kwargs) != len(self._infer_inputs):
                 raise RuntimeError(
-                    f"Expect {len(self._infer_inputs)} inputs got {len(args)}"
+                    f"Expect {len(self._infer_inputs)} inputs got {len(kwargs)}"
                 )
             for placeholder in self._infer_inputs:
                 value = kwargs[placeholder.name()]
