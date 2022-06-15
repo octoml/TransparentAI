@@ -14,4 +14,5 @@ def segment(image):
     print(r.ok)
     pass  # Implement your image segmentation model here...
 
-gr.Interface(fn=segment, inputs="image", outputs="image", examples=examples).launch(server_name="0.0.0.0", server_port=8888)
+if __name__ == "__main__":
+    gr.Interface(fn=segment, inputs="image", outputs="image", examples=examples).launch(server_name="0.0.0.0", server_port=8888)
