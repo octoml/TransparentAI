@@ -3,6 +3,37 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app: {{ .Release.Name }}-imagefrontend
+  name: {{ .Release.Name }}-imagefrontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.imagefrontend }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-imagefrontend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-imagefrontend
+        octoml.ai/inference: triton
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      containers:
+      - name: {{ .Release.Name }}-imagefrontend
+        imagePullPolicy: Always
+        image: "{{ .Values.imageRegistry }}/{{ .Values.images.imagefrontend.name}}:{{ .Values.images.imagefrontend.tag }}"
+        env:
+        - name: TAI_API_HOST #TODO better service discovery
+          value: {{ .Release.Name }}-taiapi
+        ports:
+        - containerPort: {{ .Values.imagefrontendPort}}
+          protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
     app: {{ .Release.Name }}-chat
   name: {{ .Release.Name }}-chat
   namespace: {{ .Release.Namespace }}
@@ -17,6 +48,8 @@ spec:
         app: {{ .Release.Name }}-chat
         octoml.ai/inference: triton
     spec:
+      imagePullSecrets:
+      - name: pull-secret
       containers:
       - name: {{ .Release.Name }}-chat
         imagePullPolicy: Always
@@ -27,14 +60,48 @@ spec:
         ports:
         - containerPort: {{ .Values.chatPort}}
           protocol: TCP
-      {{- if .Values.tolerations }}
-      tolerations:
-{{ toYaml .Values.tolerations | indent 6 }}
-      {{- end }}
-      {{- if .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
-      {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-taiapi
+  name: {{ .Release.Name }}-taiapi
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.taiapi }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-taiapi
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-taiapi
+    spec:
+      imagePullSecrets:
+      - name: pull-secret
+      containers:
+      - name: {{ .Release.Name }}-taiapi
+        image: "{{ .Values.imageRegistry }}/{{ .Values.images.taiapi.name}}:{{ .Values.images.taiapi.tag }}"
+        imagePullPolicy: Always
+        env:
+        - name: OCTO_HOST #TODO better service discovery
+          value: {{ .Release.Name }}-gpt2
+        ports:
+        - containerPort: {{ .Values.taiapiPort}}
+          protocol: TCP
+        resources:
+          requests:
+            memory: "4Gi"
+            ephemeral-storage: "8Gi"
+            cpu: "4"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: {{ .Values.taiapiPort}}
+          initialDelaySeconds: 5
+          failureThreshold: 60 # 60 seconds
+          periodSeconds: 1
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -56,7 +123,10 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-gpt2
+        octoml.ai/inference: triton
     spec:
+      imagePullSecrets:
+      - name: pull-secret
       containers:
       - name: {{ .Release.Name }}-gpt2
         imagePullPolicy: Always
@@ -68,64 +138,80 @@ spec:
         - --strict-model-config=false
         ports:
         - containerPort: {{ .Values.gpt2HttpPort}}
+          name: http
           protocol: TCP
         - containerPort: {{ .Values.gpt2GrpcPort}}
+          name: grpc
           protocol: TCP
         - containerPort: {{ .Values.gpt2PromPort}}
+          name: metrics
           protocol: TCP
-      {{- if .Values.tolerations }}
+        {{- if .Values.models.gpt2.resources }}
+        resources:
+  {{ toYaml .Values.models.gpt2.resources | indent 10 }}
+        {{- end }}
+      {{- if .Values.models.gpt2.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | indent 6 }}
+{{ toYaml .Values.models.gpt2tolerations | indent 6 }}
       {{- end }}
-      {{- if .Values.nodeSelector }}
+      {{- if .Values.models.gpt2.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .Values.models.gpt2.nodeSelector | indent 8 }}
       {{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}-taiapi
-  name: {{ .Release.Name }}-taiapi
+    app: {{ .Release.Name }}-style
+  name: {{ .Release.Name }}-style
   namespace: {{ .Release.Namespace }}
+  annotations:
+    prometheus.io/path: "/metrics"
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: "{{ .Values.stylePromPort }}"
 spec:
-  replicas: {{ .Values.replicas.taiapi }}
+  replicas: {{ .Values.replicas.style }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-taiapi
+      app: {{ .Release.Name }}-style
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-taiapi
+        app: {{ .Release.Name }}-style
+        octoml.ai/inference: triton
     spec:
+      imagePullSecrets:
+      - name: pull-secret
       containers:
-      - name: {{ .Release.Name }}-taiapi
-        image: "{{ .Values.imageRegistry }}/{{ .Values.images.taiapi.name}}:{{ .Values.images.taiapi.tag }}"
+      - name: {{ .Release.Name }}-style
         imagePullPolicy: Always
-        env:
-        - name: OCTO_HOST #TODO better service discovery
-          value: {{ .Release.Name }}-gpt2
+        image: "{{ .Values.imageRegistry }}/{{ .Values.images.style.name}}:{{ .Values.images.style.tag }}"
+        command:
+        - tritonserver
+        args:
+        - --model-repository=octoml/models
+        - --strict-model-config=false
         ports:
-        - containerPort: {{ .Values.taiapiPort}}
+        - containerPort: {{ .Values.styleHttpPort}}
           protocol: TCP
+          name: http
+        - containerPort: {{ .Values.styleGrpcPort}}
+          protocol: TCP
+          name: grpc
+        - containerPort: {{ .Values.stylePromPort}}
+          name: metrics
+          protocol: TCP
+        {{- if .Values.models.style.resources}}
         resources:
-          requests:
-            memory: "4Gi"
-            ephemeral-storage: "8Gi"
-            cpu: "8"
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: {{ .Values.taiapiPort}}
-          initialDelaySeconds: 5
-          failureThreshold: 60 # 60 seconds
-          periodSeconds: 1
-      {{- if .Values.tolerations }}
+  {{ toYaml .Values.models.style.resources | indent 10 }}
+        {{- end }}
+      {{- if .Values.models.style.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | indent 6 }}
+{{ toYaml .Values.models.style.tolerations | indent 6 }}
       {{- end }}
-      {{- if .Values.nodeSelector }}
+      {{- if .Values.models.style.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .Values.models.style.nodeSelector | indent 8 }}
       {{- end }}
+

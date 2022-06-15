@@ -66,11 +66,18 @@ just imageRegistry=gcr.io/octonaut-skrum docker-build
 just imageRegistry=gcr.io/octonaut-skrum push
 ```
 
+Setup k8s
+
+```
+kubectl create ns transparentai
+./scripts/upload_docker-pull-secret.sh
+```
+
 Install with helm
 
 ```bash
 cd helm
-helm install transparentai .
+helm install transparentai . -n transparentai
 
 ```
 

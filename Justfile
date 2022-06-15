@@ -64,11 +64,12 @@ docker-build:
 	docker tag transparent-ai/tai-api {{imageRegistry}}/tai-api
 
 # push images to registry 
-push:
+push: docker-build
 	docker push {{imageRegistry}}/tai-api
 	docker push {{imageRegistry}}/chat
 	docker push {{imageRegistry}}/gpt2
 	docker push {{imageRegistry}}/style
+	docker push {{imageRegistry}}/imagefrontend
 
 # up localdev
 compose-up:
