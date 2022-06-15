@@ -36,7 +36,7 @@ docker-build:
 
 	echo Image Frontend
 	cd imagefrontend && docker build -t transparent-ai/imagefrontend .
-	docker tag transparent-ai/chat {{imageRegistry}}/imagefrontend
+	docker tag transparent-ai/imagefrontend {{imageRegistry}}/imagefrontend
 
 	echo OctoML model server [gpt]
 	[ -f models/onnx_models/gpt2-lm-head-10.onnx ] || wget https://github.com/onnx/models/raw/main/text/machine_comprehension/gpt-2/model/gpt2-lm-head-10.onnx -P models/onnx_models
