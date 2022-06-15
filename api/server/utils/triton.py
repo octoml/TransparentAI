@@ -5,33 +5,37 @@ For more examples, please refer to `Triton documentation
 and `examples<https://github.com/triton-inference-server/client/tree/main/src/python/examples>`__
 """
 
+from typing import Tuple, Union
+
 import numpy as np
-from typing import Union, Tuple
 from attrdict import AttrDict
+
 try:
-    from tritonclient.http import (
-        InferenceServerClient as HttpClient,
-        InferInput as HttpInferInput
-    )
+    from tritonclient.http import InferenceServerClient as HttpClient
+    from tritonclient.http import InferInput as HttpInferInput
+
     _has_http_client = True
 except ImportError:
     _has_http_client = False
 
 try:
-    from tritonclient.grpc import (
-        InferenceServerClient as GrpcClient,
-        InferInput as GrpcInferInput
-    )
+    from tritonclient.grpc import InferenceServerClient as GrpcClient
+    from tritonclient.grpc import InferInput as GrpcInferInput
+
     _has_grpc_client = True
 except ImportError:
     _has_grpc_client = False
 
 if not (_has_grpc_client or _has_http_client):
-    raise ImportError("Cannot import tritonclient, please run `pip install tritonclient[http,grpc]`")
+    raise ImportError(
+        "Cannot import tritonclient, please run `pip install tritonclient[http,grpc]`"
+    )
 
 
 class TritonRemoteModel:
-    def __init__(self, url: str, model_name: str, model_version: str = "", protocol: str = "grpc"):
+    def __init__(
+        self, url: str, model_name: str, model_version: str = "", protocol: str = "grpc"
+    ):
         """
         A wrapper over model on Tirton server to behave like a local model.
         After initializes, the model can take numpy array(s) as inputs and
@@ -52,11 +56,15 @@ class TritonRemoteModel:
             http.
         """
         if protocol == "grpc":
-            assert _has_grpc_client, "Cannot import tritonclient.grpc. Please run `pip install tritonclient[grpc]`"
+            assert (
+                _has_grpc_client
+            ), "Cannot import tritonclient.grpc. Please run `pip install tritonclient[grpc]`"
             InferenceServerClient = GrpcClient
             InferInput = GrpcInferInput
         else:
-            assert _has_http_client, "Cannot import tritonclient.http. Please run `pip install tritonclient[http]`"
+            assert (
+                _has_http_client
+            ), "Cannot import tritonclient.http. Please run `pip install tritonclient[http]`"
             InferenceServerClient = HttpClient
             InferInput = HttpInferInput
 
@@ -64,9 +72,11 @@ class TritonRemoteModel:
         self._name = model_name
         self._version = model_version
         self._metadata = self._client.get_model_metadata(model_name, model_version)
-        if protocol == 'http':
+        if protocol == "http":
             self._metadata = AttrDict(self._metadata)
-        self._infer_inputs = [InferInput(x.name, None, x.datatype) for x in self._metadata.inputs]
+        self._infer_inputs = [
+            InferInput(x.name, None, x.datatype) for x in self._metadata.inputs
+        ]
         self._protocol = protocol
 
     @property
@@ -96,10 +106,12 @@ class TritonRemoteModel:
     def __str__(self):
         input_sig = tuple(x.name for x in self.inputs)
         output_sig = tuple(x.name for x in self.outputs)
-        return (f'Name: {self.name}[{self.version}]\n'
-                f'Inputs: {input_sig}\n'
-                f'Outputs: {output_sig}\n'
-                f'Backend: {self.backend}')
+        return (
+            f"Name: {self.name}[{self.version}]\n"
+            f"Inputs: {input_sig}\n"
+            f"Outputs: {output_sig}\n"
+            f"Backend: {self.backend}"
+        )
 
     def _set_inputs(self, *args, **kwargs):
         if len(args) > 0 and len(kwargs) > 0:
@@ -109,13 +121,17 @@ class TritonRemoteModel:
 
         if len(args) > 0:
             if len(args) != len(self._infer_inputs):
-                raise RuntimeError("Expect {} inputs got {}".format(len(self._infer_inputs), len(args)))
+                raise RuntimeError(
+                    f"Expect {len(self._infer_inputs)} inputs got {len(args)}"
+                )
             for placeholder, value in zip(self._infer_inputs, args):
                 placeholder.set_shape(value.shape)
                 placeholder.set_data_from_numpy(value)
         else:
             if len(kwargs) != len(self._infer_inputs):
-                raise RuntimeError("Expect {} inputs got {}".format(len(self._infer_inputs), len(kwargs)))
+                raise RuntimeError(
+                    f"Expect {len(self._infer_inputs)} inputs got {len(args)}"
+                )
             for placeholder in self._infer_inputs:
                 value = kwargs[placeholder.name()]
                 placeholder.set_shape(value.shape)
@@ -124,8 +140,7 @@ class TritonRemoteModel:
     def __call__(self, *args, **kwargs) -> Union[np.ndarray, Tuple[np.ndarray, ...]]:
         self._set_inputs(*args, **kwargs)
         response = self._client.infer(
-            model_name=self.name,
-            inputs=self._infer_inputs,
-            model_version=self.version)
+            model_name=self.name, inputs=self._infer_inputs, model_version=self.version
+        )
         outputs = tuple(response.as_numpy(o.name) for o in self.outputs)
         return outputs
