@@ -83,3 +83,15 @@ compose-up:
 # down localdev
 compose-down:
 	docker-compose down
+
+# install helm chart for the first time
+helm-install
+	echo did you create the pull-secret? See readme
+	cd helm
+	helm install transparentai . -n transparentai
+
+# sync helm files with deployment
+helm-upgrade
+	echo "upgradin"
+	cd helm
+	helm upgrade transparentai . -n transparentai
