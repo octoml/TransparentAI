@@ -56,6 +56,10 @@ docker-build:
 	docker tag magenta_image_stylization-local transparent-ai/style
 	docker tag magenta_image_stylization-local {{imageRegistry}}/style
 
+	echo Pre/Post Proc API Server
+	cd api && docker build --no-cache -t transparent-ai/api .
+	docker tag transparent-ai/api {{imageRegistry}}/api
+
 	echo ML API Server
 	mkdir -p tai-api/models/onnx_models
 	cp models/onnx_models/gpt2-lm-head-10.onnx tai-api/models/onnx_models/
@@ -63,9 +67,10 @@ docker-build:
 	cd tai-api && docker build -t transparent-ai/tai-api .
 	docker tag transparent-ai/tai-api {{imageRegistry}}/tai-api
 
-# push images to registry 
-push: docker-build
+# push images to registry
+push:
 	docker push {{imageRegistry}}/tai-api
+	docker push {{imageRegistry}}/api
 	docker push {{imageRegistry}}/chat
 	docker push {{imageRegistry}}/gpt2
 	docker push {{imageRegistry}}/style
