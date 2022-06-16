@@ -7,6 +7,7 @@
         {
             "name": "Python: API Server",
             "type": "python",
+            "python": "${workspaceFolder}/api/.venv/bin/python",
             "request": "launch",
             "module": "uvicorn",
             "args": [
@@ -15,25 +16,28 @@
                 "8050"
             ],
             "cwd": "${workspaceFolder}/api/server",
+            "console": "integratedTerminal",
             "justMyCode": false
         },
         {
             "name": "Python: API Current File",
             "type": "python",
+            "python": "${workspaceFolder}/api/.venv/bin/python",
             "request": "launch",
             "program": "${file}",
+            "cwd": "${workspaceFolder}/api",
             "console": "integratedTerminal",
             "justMyCode": false,
-            "cwd": "${workspaceFolder}/api",
         },
         {
             "name": "Python: Frontend",
             "type": "python",
             "request": "launch",
+            "python": "${workspaceFolder}/frontend/.venv/bin/python",
             "program": "run.py",
+            "cwd": "${workspaceFolder}/frontend",
             "console": "integratedTerminal",
-            "justMyCode": false,
-            "cwd": "${workspaceFolder}/imagefrontend",
+            "justMyCode": false
         },
     ]
 }
