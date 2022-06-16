@@ -1,21 +1,21 @@
-version: "3.9"
+ersion: "3.9"
 services:
-  chat: #YOUR APP
-    image: transparent-ai/chat
+  frontend: # YOUR APP
+    image: transparent-ai/frontend
     environment:
-      TAI_API_HOST: taiapi # TODO: better service discoverdy
+      API_HOST: api
+      API_PORT: 8050
     ports:
-      - "3000:3000"
-  taiapi: # PREPROCESSING
-    image: transparent-ai/tai-api
+      - "8888:8888"
+  api: # PRE and POST PROCESSING
+    image: transparent-ai/api
     environment:
-      OCTO_HOST: gpt2 # TODO: better service discovery
+      MODEL_ENDPOINT: "style:8000"
+      # There are a few names that we've used over the course of development
+      MODEL_NAME: "magenta_image_stylization"
     ports:
-      - "9000:9000"
-  gpt2:
-    image: transparent-ai/gpt2-lm-head-10-local
-    command: tritonserver --model-repository=octoml/models --strict-model-config=false
-  style: # MODEL wrapped in triton/octoml
+      - "8050:8050"
+  style: # MODEL containzerized by octoml in triton inference server
     image: transparent-ai/style
     ports:
       - "8000:8000"
