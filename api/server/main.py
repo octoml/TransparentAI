@@ -61,7 +61,7 @@ async def generate_image(
         image_crop_center(style_image, MODEL_IMAGE_WIDTH, MODEL_IMAGE_HEIGHT)
     )
 
-    result = model(placeholder=image_content_array, placeholder_1=image_style_array)
+    result = model(placeholder=source_image_array, placeholder_1=style_image_array)
     result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
 
     with BytesIO() as response_stream:
