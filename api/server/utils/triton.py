@@ -133,7 +133,9 @@ class TritonRemoteModel:
                     f"Expect {len(self._infer_inputs)} inputs got {len(kwargs)}"
                 )
             for placeholder in self._infer_inputs:
-                value = kwargs[placeholder.name()]
+                # TODO: Strip any colon (:) index parts from input names
+                input_name = placeholder.name().split(":")[0]
+                value = kwargs[input_name]
                 placeholder.set_shape(value.shape)
                 placeholder.set_data_from_numpy(value)
 
