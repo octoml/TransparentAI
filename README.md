@@ -76,7 +76,7 @@ kubectl create ns transparentai
 Install with helm
 
 ```bash
-cd helm
+cd deploy/helm
 helm install transparentai . -n transparentai
 
 ```
