@@ -7,8 +7,8 @@ from fastapi import FastAPI, UploadFile
 from fastapi.responses import JSONResponse, Response
 from PIL import Image
 
-from config import Endpoint, load_config
-from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH, MODEL_NAME
+from config import TargetConfig, load_config
+from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH
 from utils.image import (
     image_crop_center,
     image_from_normalized_ndarray,
@@ -20,48 +20,48 @@ config = load_config("../config.yaml")
 
 
 @dataclass(frozen=True)
-class ModelEndpoint:
-    endpoint: Endpoint
+class TargetModel:
+    config: TargetConfig
     model: TritonRemoteModel
 
 
-model_endpoints: Dict[str, ModelEndpoint] = dict()
-for endpoint_name, endpoint in config.endpoints.items():
-    endpoint_url = f"{endpoint.host}:{endpoint.port}"
-    endpoint_model = TritonRemoteModel(
-        endpoint_url, MODEL_NAME, protocol=endpoint.protocol
+target_models: Dict[str, TritonRemoteModel] = dict()
+for target_name, target_config in config.targets.items():
+    target_url = f"{target_config.host}:{target_config.port}"
+    target_model = TritonRemoteModel(
+        target_url, target_config.model, protocol=target_config.protocol
     )
-    model_endpoints[endpoint_name] = endpoint_model
+    target_models[target_name] = target_model
 
 app = FastAPI()
 
 
-@app.get("/endpoints/")
-def get_endpoints() -> List[str]:
-    return list(model_endpoints.keys())
+@app.get("/targets/")
+def get_targets() -> List[str]:
+    return list(target_models.keys())
 
 
 @app.post("/stylize/")
 async def generate_image(
-    endpoint: str, source_image_file: UploadFile, style_image_file: UploadFile
+    source_image: UploadFile,
+    style_image: UploadFile,
+    target: str = "default",
 ):
-    model_endpoint = model_endpoints.get(endpoint)
-    if not model_endpoint:
-        return JSONResponse(status_code=404, content={"message": "Endpoint not found"})
+    model = target_models.get(target)
+    if not model:
+        return JSONResponse(status_code=404, content={"message": "Target not found"})
 
-    source_image = Image.open(source_image_file.file)
-    print(source_image.format, source_image.size, source_image.mode)
+    source_image = Image.open(source_image.file)
     source_image_array = image_to_normalized_ndarray(
         image_crop_center(source_image, MODEL_IMAGE_WIDTH, MODEL_IMAGE_HEIGHT)
     )
 
-    style_image = Image.open(style_image_file.file)
-    print(style_image.format, style_image.size, style_image.mode)
+    style_image = Image.open(style_image.file)
     style_image_array = image_to_normalized_ndarray(
         image_crop_center(style_image, MODEL_IMAGE_WIDTH, MODEL_IMAGE_HEIGHT)
     )
 
-    result = model_endpoint(style_image_array, source_image_array)
+    result = model(placeholder=source_image_array, placeholder_1=style_image_array)
     result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
 
     with BytesIO() as response_stream:

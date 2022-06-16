@@ -3,7 +3,7 @@ from os import getenv, path
 import numpy as np
 from PIL import Image
 
-from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH, MODEL_NAME
+from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH
 from utils.image import (
     image_crop_center,
     image_from_normalized_ndarray,
@@ -11,8 +11,9 @@ from utils.image import (
 )
 from utils.triton import TritonRemoteModel
 
-MODEL_ENDPOINT = "host.docker.internal:8000"
-MODEL_PROTOCOL = "http"
+MODEL_ENDPOINT = getenv("MODEL_ENDPOINT", "host.docker.internal:8000")
+MODEL_PROTOCOL = getenv("MODEL_PROTOCOL", "http")
+MODEL_NAME = getenv("MODEL_NAME", "magenta_image_stylization")
 
 
 def get_remote_model() -> TritonRemoteModel:
@@ -28,7 +29,6 @@ image_content_array = image_to_normalized_ndarray(
     )
 )
 
-
 image_style_file = path.join(image_base_path, "Style_Kanagawa.jpg")
 image_style_array = image_to_normalized_ndarray(
     image_crop_center(
@@ -37,7 +37,7 @@ image_style_array = image_to_normalized_ndarray(
 )
 
 model = get_remote_model()
-result = model(image_style_array, image_content_array)
+result = model(placeholder=image_content_array, placeholder_1=image_style_array)
 result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
 result_image.save("styled.jpg")
 if getenv("LOOP"):
@@ -46,5 +46,4 @@ if getenv("LOOP"):
         i += 1
         if i % 10 == 0:
             print("Iteration: ", i)
-        result = model(image_style_array, image_content_array)
-        result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
+        model(placeholder=image_content_array, placeholder_1=image_style_array)

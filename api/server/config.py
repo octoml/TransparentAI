@@ -10,7 +10,8 @@ _CONFIG_ENV_TAG = "!env"
 
 
 @dataclass(frozen=True)
-class Endpoint:
+class TargetConfig:
+    model: str
     protocol: str
     host: str
     port: int
@@ -18,19 +19,21 @@ class Endpoint:
 
 class Config:
     def __init__(self, kwargs: dict):
-        self.endpoints: Dict[str, Endpoint] = dict()
-        endpoint_param = kwargs["endpoints"]
-        for endpoint_name, endpoint_url in endpoint_param.items():
-            parse_result = urlparse(endpoint_url)
-            endpoint = Endpoint(
+        self.targets: Dict[str, TargetConfig] = dict()
+        targets_param = kwargs["targets"]
+        for target_name, target_config in targets_param.items():
+            endpoint = target_config["endpoint"]
+            parse_result = urlparse(endpoint)
+            model_config = TargetConfig(
+                target_config["model"],
                 parse_result.scheme,
                 parse_result.hostname,
                 parse_result.port if parse_result.port else 80,
             )
-            self.endpoints[endpoint_name] = endpoint
+            self.targets[target_name] = model_config
 
 
-def load_config(config_path: str = _CONFIG_DEFAULT_PATH):
+def load_config(config_path: str = _CONFIG_DEFAULT_PATH) -> Config:
     with open(config_path, "r") as config_file:
         SafeLoader.add_constructor(_CONFIG_ENV_TAG, _load_env_property)
         config_kwargs = safe_load(config_file)
@@ -49,5 +52,8 @@ def _load_env_property(loader, node):
 
 
 if __name__ == "__main__":
-    environ.setdefault("MODEL_CPU_OPTIMIZED_URL", "http://host1.docker.internal:8001")
+    environ.setdefault(
+        "TARGET_ENDPOINT_CPU_OPTIMIZED", "http://host1.docker.internal:8001"
+    )
     config = load_config()
+    print(config)
