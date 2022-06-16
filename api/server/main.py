@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from io import BytesIO
 from typing import Dict, List
+import time
 
 import numpy as np
 from fastapi import FastAPI, UploadFile
@@ -28,13 +29,18 @@ class TargetModel:
 target_models: Dict[str, TritonRemoteModel] = dict()
 for target_name, target_config in config.targets.items():
     target_url = f"{target_config.host}:{target_config.port}"
-    target_model = TritonRemoteModel(
-        target_url, target_config.model, protocol=target_config.protocol
-    )
+    for i in range(10):
+        try:
+            target_model = TritonRemoteModel(
+                target_url, target_config.model, protocol=target_config.protocol
+            )
+            break
+        except:
+            print("Waiting for remote model...")
+            time.sleep(1)
     target_models[target_name] = target_model
 
 app = FastAPI()
-
 
 @app.get("/targets/")
 def get_targets() -> List[str]:
