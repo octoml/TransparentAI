@@ -13,7 +13,7 @@ from utils.triton import TritonRemoteModel
 
 MODEL_ENDPOINT = getenv("MODEL_ENDPOINT", "host.docker.internal:8000")
 MODEL_PROTOCOL = getenv("MODEL_PROTOCOL", "http")
-MODEL_NAME = getenv("MODEL_NAME", "magenta_arbitrary-image-stylization-v1")
+MODEL_NAME = getenv("MODEL_NAME", "magenta_image_stylization")
 
 
 def get_remote_model() -> TritonRemoteModel:
@@ -37,7 +37,7 @@ image_style_array = image_to_normalized_ndarray(
 )
 
 model = get_remote_model()
-result = model(image_style_array, image_content_array)
+result = model(placeholder=image_content_array, placeholder_1=image_style_array)
 result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
 result_image.save("styled.jpg")
 if getenv("LOOP"):
@@ -46,5 +46,4 @@ if getenv("LOOP"):
         i += 1
         if i % 10 == 0:
             print("Iteration: ", i)
-        result = model(image_style_array, image_content_array)
-        result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
+        model(placeholder=image_content_array, placeholder_1=image_style_array)
