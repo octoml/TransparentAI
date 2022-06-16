@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "frontend"
+version = "0.1.0"
+description = ""
+authors = ["Gaz Iqbal <giqbal@octoml.ai>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+gradio = "^3.0.17"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+flake8 = "^4.0.1"
+pylint = "^2.14.2"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
