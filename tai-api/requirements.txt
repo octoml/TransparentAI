@@ -1,6 +1,0 @@
-fastapi
-uvicorn[standard]
-ariel-client-triton
-transformers
-torch
-onnxruntime
