@@ -2,18 +2,15 @@ targets:
   # TODO: add in proc options
   # cpu_in_proc:
   # gpu_in_proc:
-  default:
-    endpoint: !env TARGET_ENDPOINT http://transparentai-style:8000
-    model: !env TARGET_MODEL magenta_image_stylization
   cpu_normal:
     endpoint: !env TARGET_ENDPOINT_CPU_NORMAL http://transparentai-style-cpu-unaccelerated:8000
     model: !env TARGET_NAME_CPU_NORMAL magenta_arbitrary-image-stylization-v1
-  cpu_optimized:
+  cpu_accelerated:
     endpoint: !env TARGET_ENDPOINT_CPU_OPTIMIZED http://transparentai-style-cpu-accelerated:8000
     model: !env TARGET_MODEL_CPU_OPTIMIZED magenta_image_stylization
   gpu_normal:
     endpoint: !env TARGET_ENDPOINT_GPU_NORMAL http://transparentai-style-gpu-unaccelerated:8000
     model: !env TARGET_MODEL_GPU_NORMAL magenta_arbitrary-image-stylization-v1-256_2.tar
-  gpu_optimized: 
+  gpu_accelerated:
     endpoint: !env TARGET_ENDPOINT_GPU_OPTIMIZED http://transparentai-style-gpu-accelerated:8000
     model: !env TARGET_MODEL_GPU_OPTIMIZED magenta_image_stylization
