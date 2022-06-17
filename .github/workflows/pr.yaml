@@ -37,11 +37,11 @@ jobs:
         run: sleep 100
       - name: docker ps
         run: docker ps
-      - name: check chat
-        run: curl localhost:3000
+      - name: check frontend
+        run: curl localhost:8888
       - name: check inferenceserver
         run: curl localhost:8000/v2/health/ready
-      - name: check taiapi
-        run: curl localhost:9000
+      - name: check api
+        run: curl localhost:8050
       - name: validate that helm chart can be packaged, this doesn't push it but does some sanity checking on the helm chart
         run: cd deploy/helm && helm package .
