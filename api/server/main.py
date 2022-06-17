@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from io import BytesIO
 from typing import Dict, List
@@ -16,6 +17,7 @@ from utils.image import (
 )
 from utils.triton import TritonRemoteModel
 
+logger = logging.getLogger(__name__)
 config = load_config("../config.yaml")
 
 
@@ -28,9 +30,15 @@ class TargetModel:
 target_models: Dict[str, TritonRemoteModel] = dict()
 for target_name, target_config in config.targets.items():
     target_url = f"{target_config.host}:{target_config.port}"
-    target_model = TritonRemoteModel(
-        target_url, target_config.model, protocol=target_config.protocol
-    )
+    try:
+        target_model = TritonRemoteModel(
+            target_url, target_config.model, protocol=target_config.protocol
+        )
+    except Exception as e:
+        logger.exception(
+            f"Unable to connect to target endpoint '{target_name}' at '{target_url}'"
+        )
+        raise
     target_models[target_name] = target_model
 
 app = FastAPI()
