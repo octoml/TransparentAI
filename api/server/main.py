@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from io import BytesIO
 from typing import Dict, List
 import time
+import os
 
 import numpy as np
 from fastapi import FastAPI, UploadFile
@@ -17,7 +18,8 @@ from utils.image import (
 )
 from utils.triton import TritonRemoteModel
 
-config = load_config("../config.yaml")
+CONFIG_FILE = os.getenv("CONFIG_FILE", "../config.yaml")
+config = load_config(CONFIG_FILE)
 
 
 @dataclass(frozen=True)
@@ -26,18 +28,14 @@ class TargetModel:
     model: TritonRemoteModel
 
 
+print("waiting 5 for triton to start")
+time.sleep(5) # Wait for triton to be running
 target_models: Dict[str, TritonRemoteModel] = dict()
 for target_name, target_config in config.targets.items():
     target_url = f"{target_config.host}:{target_config.port}"
-    for i in range(10):
-        try:
-            target_model = TritonRemoteModel(
-                target_url, target_config.model, protocol=target_config.protocol
-            )
-            break
-        except:
-            print("Waiting for remote model...")
-            time.sleep(1)
+    target_model = TritonRemoteModel(
+        target_url, target_config.model, protocol=target_config.protocol
+    )
     target_models[target_name] = target_model
 
 app = FastAPI()
