@@ -2,6 +2,7 @@ from io import BytesIO
 from os import getenv
 from typing import List
 
+import time
 import gradio as gr
 import requests
 from PIL import Image
@@ -13,8 +14,11 @@ API_URL_STYLIZE = API_URL + "/stylize"
 API_URL_TARGETS = API_URL + "/targets"
 
 examples = [
-    ["examples/images/mountain.jpg", "examples/images/pinneaple.jpg"],
-    ["examples/images/van.jpg", "examples/images/pinneaple.jpg"],
+    ["examples/images/pinneaple.jpg", "examples/images/van.jpg"],
+    ["examples/images/pinneaple.jpg","examples/images/mountain.jpg"],
+    ["examples/images/pinneaple.jpg","examples/images/wood_fire.jpg"],
+    ["examples/images/pinneaple.jpg","examples/images/trees.jpg"],
+
 ]
 
 
@@ -41,6 +45,8 @@ def query_targets() -> List[str]:
 
 
 if __name__ == "__main__":
+    print("Sleeping 7 to wait for api, which is waiting for modelserver")
+    time.sleep(7)
     gr.close_all()
     try:
         gr_inputs = [

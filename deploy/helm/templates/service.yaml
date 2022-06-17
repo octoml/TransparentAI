@@ -9,9 +9,9 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: {{ .Values.chatPort }}
+    targetPort: {{ .Values.imagefrontendPort }}
   selector:
-    app: {{ .Release.Name }}-chat
+    app: {{ .Release.Name }}-imagefrontend
 ---
 apiVersion: v1
 kind: Service
@@ -26,6 +26,20 @@ spec:
     targetPort: {{ .Values.taiapiPort }}
   selector:
     app: {{ .Release.Name }}-taiapi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-api
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: http
+    port: {{ .Values.apiPort }}
+    protocol: TCP
+    targetPort: {{ .Values.apiPort }}
+  selector:
+    app: {{ .Release.Name }}-api
 ---
 apiVersion: v1
 kind: Service

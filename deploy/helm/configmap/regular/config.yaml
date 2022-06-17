@@ -1,0 +1,7 @@
+targets:
+  # TODO: add in proc options
+  # cpu_in_proc:
+  # gpu_in_proc:
+  default:
+    endpoint: !env TARGET_ENDPOINT http://transparentai-style:8000
+    model: !env TARGET_MODEL magenta_image_stylization

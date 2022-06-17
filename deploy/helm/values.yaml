@@ -40,7 +40,7 @@ images:
     name: gpt2
     tag: latest
   style:
-    name: style_g4dn_optimized # this is optimzied, this is not what's made by `just docker-build` this is made by the octoml platform and is 20% faster than tensorflow and 70% fastert han onnx on a t4gpu (g4dn.xlarge)
+    name: fullaccel-magenta_image_stylization-aws_g4dn.xlarge # this is optimzied, this is not what's made by `just docker-build` this is made by the octoml platform and is 20% faster than tensorflow and 70% fastert han onnx on a t4gpu (g4dn.xlarge)
     tag: latest
 
 # Hostname for the ingress
