@@ -2,6 +2,7 @@ from io import BytesIO
 from os import getenv
 from typing import List
 
+import time
 import gradio as gr
 import requests
 from PIL import Image
@@ -41,6 +42,8 @@ def query_targets() -> List[str]:
 
 
 if __name__ == "__main__":
+    print("Sleeping 7 to wait for api, which is waiting for modelserver")
+    time.sleep(7)
     gr.close_all()
     try:
         gr_inputs = [
