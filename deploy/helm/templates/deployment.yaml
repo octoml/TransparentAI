@@ -27,8 +27,6 @@ spec:
           value: {{ .Release.Name }}-api
         - name: API_PORT
           value: "{{ .Values.apiPort }}"
-        - name: STYLE_IMAGE
-          value: "tensor_dog_crop_crop.jpg"
         - name: PYTHONUNBUFFERED
           value: "1"
         ports:
@@ -60,6 +58,8 @@ spec:
         image: "{{ .Values.imageRegistry }}/{{ .Values.images.api.name}}:{{ .Values.images.api.tag }}"
         env:
         # Change this to switch models(today)
+        - name: CONFIG_FILE
+          value: "/config/config.yaml"
         - name: MODEL_ENDPOINT
           value: {{ .Release.Name }}-style-cpu-unaccelerated:{{ .Values.styleHttpPort}}
         - name: MODEL_NAME
@@ -69,6 +69,15 @@ spec:
         ports:
         - containerPort: {{ .Values.apiPort}}
           protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          readOnly: true
+      # TODO mount the config map (extra or regular) based on if extra is turned on
+      volumes:
+      - name: config
+        configMap:
+          name: api-config-extra
 ---
 apiVersion: apps/v1
 kind: Deployment
