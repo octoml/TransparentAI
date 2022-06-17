@@ -14,8 +14,11 @@ API_URL_STYLIZE = API_URL + "/stylize"
 API_URL_TARGETS = API_URL + "/targets"
 
 examples = [
-    ["examples/images/mountain.jpg", "examples/images/pinneaple.jpg"],
-    ["examples/images/van.jpg", "examples/images/pinneaple.jpg"],
+    ["examples/images/pinneaple.jpg", "examples/images/van.jpg"],
+    ["examples/images/pinneaple.jpg","examples/images/mountain.jpg"],
+    ["examples/images/pinneaple.jpg","examples/images/wood_fire.jpg"],
+    ["examples/images/pinneaple.jpg","examples/images/trees.jpg"],
+
 ]
 
 
