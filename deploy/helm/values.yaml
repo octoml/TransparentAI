@@ -42,19 +42,13 @@ images:
     tag: latest
 
 ingress:
-  enabled: true
-  host: demo.octoml.ai
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/backend-protocol: HTTP
+  enabled: false
+  host: example.com
+  annotations: {}
   ingressClassName: alb
   path: /
   pathType: Prefix
   tls: []
-
-# Hostname for the ingress
-hostname:
 
 tolerations: []
 ## If you want to set tolerations, delete the `[]` in the line above
