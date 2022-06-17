@@ -30,7 +30,7 @@ spec:
         - name: MODEL_ENDPOINT
           value: "transparentai-style-cpu-accelerated:8000"
         - name: MODEL_NAME
-          value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
+          value: "magenta_image_stylization"
       - name: tai-cannon-2
         imagePullPolicy: Always
         image: gcr.io/octonaut-skrum/api
@@ -54,4 +54,4 @@ spec:
         - name: MODEL_ENDPOINT
           value: "transparentai-style-gpu-accelerated:8000"
         - name: MODEL_NAME
-          value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
+          value: "magenta_image_stylization"
