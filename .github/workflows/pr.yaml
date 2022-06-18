@@ -36,7 +36,7 @@ jobs:
       - name: sleep 100 # taiapi pulls a big file from the internet
         run: sleep 100
       - name: docker ps
-        run: docker ps
+        run: docker ps -a
       - name: check frontend
         run: curl localhost:8888
       - name: check inferenceserver
