@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+data:
+  {{- (.Files.Glob "configmap/regular/*").AsConfig | nindent 2 }}
+{{- if .Values.enableExtraModels }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config-extra
+data:
+  {{- (.Files.Glob "configmap/extra/*").AsConfig | nindent 2 }}
+{{- end }}

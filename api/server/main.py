@@ -1,4 +1,6 @@
 import logging
+import os
+import time
 from dataclasses import dataclass
 from io import BytesIO
 from typing import Dict, List
@@ -17,8 +19,11 @@ from utils.image import (
 )
 from utils.triton import TritonRemoteModel
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-config = load_config("../config.yaml")
+
+CONFIG_FILE = os.getenv("CONFIG_FILE", "../config.yaml")
+config = load_config(CONFIG_FILE)
 
 
 @dataclass(frozen=True)
@@ -27,6 +32,8 @@ class TargetModel:
     model: TritonRemoteModel
 
 
+print("Waiting 5 for triton to start")
+time.sleep(5)  # Wait for triton to be running
 target_models: Dict[str, TritonRemoteModel] = dict()
 for target_name, target_config in config.targets.items():
     target_url = f"{target_config.host}:{target_config.port}"

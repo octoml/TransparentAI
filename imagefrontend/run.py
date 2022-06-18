@@ -1,3 +1,4 @@
+import time
 from io import BytesIO
 from os import getenv
 from time import perf_counter_ns, time
@@ -19,6 +20,12 @@ style_images = [
     ["images/examples/style_tensor_dog_crop.jpg"],
     ["images/examples/pineapple.jpg"],
 ]
+
+# examples = [
+#     ["examples/images/pinneaple.jpg", "examples/images/van.jpg"],
+#     ["examples/images/pinneaple.jpg","examples/images/mountain.jpg"],
+#     ["examples/images/pinneaple.jpg","examples/images/wood_fire.jpg"],
+#     ["examples/images/pinneaple.jpg","examples/images/trees.jpg"],
 
 
 def stylize_webcam(webcam_data, style_image, target):
@@ -266,6 +273,8 @@ def create_app(targets: List[str]):
 
 
 if __name__ == "__main__":
+    print("Sleeping 7 to wait for api, which is waiting for modelserver")
+    time.sleep(7)
     gr.close_all()
     try:
         # targets = ["default"]  # query_targets()

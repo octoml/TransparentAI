@@ -1,5 +1,6 @@
+import logging
 from dataclasses import dataclass
-from os import environ, path
+from os import environ
 from typing import Dict
 from urllib.parse import urlparse
 
@@ -7,6 +8,8 @@ from yaml import SafeLoader, safe_load
 
 _CONFIG_DEFAULT_PATH = "config.yaml"
 _CONFIG_ENV_TAG = "!env"
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -24,6 +27,7 @@ class Config:
         for target_name, target_config in targets_param.items():
             endpoint = target_config["endpoint"]
             parse_result = urlparse(endpoint)
+            logger.info(f"Loaded {target_name}, {endpoint}")
             model_config = TargetConfig(
                 target_config["model"],
                 parse_result.scheme,

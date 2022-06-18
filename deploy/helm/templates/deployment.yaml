@@ -26,7 +26,9 @@ spec:
         - name: API_HOST
           value: {{ .Release.Name }}-api
         - name: API_PORT
-          value: {{ .Release.Name }}-api
+          value: "{{ .Values.apiPort }}"
+        - name: PYTHONUNBUFFERED
+          value: "1"
         ports:
         - containerPort: {{ .Values.imagefrontendPort}}
           protocol: TCP
@@ -56,13 +58,26 @@ spec:
         image: "{{ .Values.imageRegistry }}/{{ .Values.images.api.name}}:{{ .Values.images.api.tag }}"
         env:
         # Change this to switch models(today)
+        - name: CONFIG_FILE
+          value: "/config/config.yaml"
         - name: MODEL_ENDPOINT
-          value: {{ .Release.Name }}-style:{{ .Values.styleHttpPort}}
+          value: {{ .Release.Name }}-style-cpu-unaccelerated:{{ .Values.styleHttpPort}}
         - name: MODEL_NAME
-          value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
+          value: "magenta_arbitrary-image-stylization-v1"
+          #value: "magenta_arbitrary-image-stylization-v1-256_2"
+          #value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
         ports:
         - containerPort: {{ .Values.apiPort}}
           protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          readOnly: true
+      # TODO mount the config map (extra or regular) based on if extra is turned on
+      volumes:
+      - name: config
+        configMap:
+          name: api-config-extra
 ---
 apiVersion: apps/v1
 kind: Deployment
