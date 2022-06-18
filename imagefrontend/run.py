@@ -15,10 +15,15 @@ API_URL_STYLIZE = API_URL + "/stylize"
 API_URL_TARGETS = API_URL + "/targets"
 
 style_images = [
-    ["images/examples/style_kanagawa.jpg"],
-    ["images/examples/style_tensor_dog.jpg"],
-    ["images/examples/style_tensor_dog_crop.jpg"],
+    ["images/examples/tensor_dog.jpg"],
+    ["images/examples/wood_fire.jpg"],
+    ["images/examples/mountain.jpg"],
+    ["images/examples/trees.jpg"],
+]
+
+source_images = [
     ["images/examples/pineapple.jpg"],
+    ["images/examples/van.jpg"],
 ]
 
 # examples = [
@@ -197,7 +202,7 @@ def query_targets() -> List[str]:
 def create_app(targets: List[str]):
     header = """
     <img src="https://www.datocms-assets.com/45680/1655488521-logo_transparent_ai.png" width=200px height=100px align="left">
-    <center><h1>OctoML Style Transfer Demo</h1>And more promo stuff</center>
+    <center><h1>OctoML Style Transfer Demo</h1><Try the OctoML CLI! <a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a></center>
     """
     gr.Markdown(header)
 
@@ -210,13 +215,28 @@ def create_app(targets: List[str]):
                         label="Image",
                         source="upload",
                         type="file",
-                        value=style_images[0][0],
+                        interactive=False,
+                        value=source_images[0][0],
                     )
                     input_upload.style(width=512, height=512, rounded=True)
                     input_upload_dataset = gr.Dataset(
                         components=[input_upload],
-                        samples=style_images,
+                        samples=source_images,
                         type="index",
+                    )
+
+                    def load_upload_example(example_id):
+                        processed_example = input_upload.preprocess_example(
+                            source_images[example_id][0]
+                        )
+                        return processed_example
+
+                    input_upload_dataset.click(
+                        load_upload_example,
+                        inputs=[input_upload_dataset],
+                        outputs=[input_upload],
+                        _postprocess=False,
+                        queue=False,
                     )
 
                     input_style = gr.Image(
@@ -230,6 +250,20 @@ def create_app(targets: List[str]):
                         components=[input_style],
                         samples=style_images,
                         type="index",
+                    )
+
+                    def load_style_example(example_id):
+                        processed_example = input_style.preprocess_example(
+                            style_images[example_id][0]
+                        )
+                        return processed_example
+
+                    input_style_dataset.click(
+                        load_style_example,
+                        inputs=[input_style_dataset],
+                        outputs=[input_style],
+                        _postprocess=False,
+                        queue=False,
                     )
 
                 with gr.Column():
@@ -249,15 +283,12 @@ def create_app(targets: List[str]):
                     output_latency = gr.Markdown("<h3>Latency: --.-- ms</h3>")
 
                     gr.Markdown("Things about OctoML")
-        #             with gr.Row():
-        #                 button_upload = gr.Button("Stylize Upload", variant="primary")
-        #                 # button_webcam = gr.Button("Stylize Webcam", variant="primary")
-        #                 # with gr.Row():
-        #                 output_latency = gr.Markdown("<h3>Latency: --.-- ms</h3>")
-        # output_stylized.style(width=512, height=512)
 
-        # input_upload.style(width=512, height=512, rounded=True)
-        # button_upload = gr.Button("Stylize", variant="primary")
+                button_upload.click(
+                    stylize_upload,
+                    inputs=[input_upload, input_style, input_target],
+                    outputs=[output_stylized, output_latency],
+                )
 
         tab_webcam = gr.TabItem("WebCam")
         with tab_webcam:
@@ -271,10 +302,21 @@ def create_app(targets: List[str]):
             # input_webcam.style(width=512, height=512, rounded=True)
             # button_webcam = gr.Button("Stylize", variant="primary")
 
+        #             with gr.Row():
+        #                 button_upload = gr.Button("Stylize Upload", variant="primary")
+        #                 # button_webcam = gr.Button("Stylize Webcam", variant="primary")
+        #                 # with gr.Row():
+        #                 output_latency = gr.Markdown("<h3>Latency: --.-- ms</h3>")
+        # output_stylized.style(width=512, height=512)
+
+        # input_upload.style(width=512, height=512, rounded=True)
+        # button_upload = gr.Button("Stylize", variant="primary")
+
 
 if __name__ == "__main__":
-    print("Sleeping 7 to wait for api, which is waiting for modelserver")
-    time.sleep(7)
+    # print("Sleeping 7 to wait for api, which is waiting for modelserver")
+    # import time
+    # time.sleep(7)
     gr.close_all()
     try:
         # targets = ["default"]  # query_targets()
@@ -330,7 +372,7 @@ if __name__ == "__main__":
                 share=False,
                 debug=True,
                 prevent_thread_lock=True,
-                favicon_path="./images/assets/favicon.ico",
+                favicon_path="./images/assets/octoml_favicon.png",
             )
 
         # gr_inputs = [
