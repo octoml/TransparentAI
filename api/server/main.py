@@ -1,8 +1,9 @@
+import logging
+import os
+import time
 from dataclasses import dataclass
 from io import BytesIO
 from typing import Dict, List
-import time
-import os
 
 import numpy as np
 from fastapi import FastAPI, UploadFile
@@ -18,6 +19,9 @@ from utils.image import (
 )
 from utils.triton import TritonRemoteModel
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 CONFIG_FILE = os.getenv("CONFIG_FILE", "../config.yaml")
 config = load_config(CONFIG_FILE)
 
@@ -28,17 +32,24 @@ class TargetModel:
     model: TritonRemoteModel
 
 
-print("waiting 5 for triton to start")
-time.sleep(5) # Wait for triton to be running
+print("Waiting 5 for triton to start")
+time.sleep(5)  # Wait for triton to be running
 target_models: Dict[str, TritonRemoteModel] = dict()
 for target_name, target_config in config.targets.items():
     target_url = f"{target_config.host}:{target_config.port}"
-    target_model = TritonRemoteModel(
-        target_url, target_config.model, protocol=target_config.protocol
-    )
+    try:
+        target_model = TritonRemoteModel(
+            target_url, target_config.model, protocol=target_config.protocol
+        )
+    except Exception as e:
+        logger.exception(
+            f"Unable to connect to target endpoint '{target_name}' at '{target_url}'"
+        )
+        raise
     target_models[target_name] = target_model
 
 app = FastAPI()
+
 
 @app.get("/targets/")
 def get_targets() -> List[str]:
