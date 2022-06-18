@@ -14,14 +14,19 @@ API_URL = f"http://{API_HOST}:{API_PORT}"
 API_URL_STYLIZE = API_URL + "/stylize"
 API_URL_TARGETS = API_URL + "/targets"
 
-style_images = [
+MARKDOWN_LOGO = """<img src="https://www.datocms-assets.com/45680/1655488521-logo_transparent_ai.png" width=200px height=100px>"""
+MARKDOWN_HEADER = """<h1>OctoML Style Transfer Demo</h1>Try the OctoML CLI! <a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a>"""
+MARKDOWN_DETAILS = """See the following links for more details.<ul><li><a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a></li><li><a href="https://github.com/octoml/octoml-cli-tutorials">OctoML CLI Tutorials</a></li><li><a href="https://github.com/octoml/TransparentAI">Transparent AI Sample Repo</a></li></ul>"""
+MARKDOWN_FOOTER_LOGO = """<img src="https://www.datocms-assets.com/45680/1655488516-logo_octoml.png" width=80px align="right">"""
+
+IMAGES_STYLES = [
     ["images/examples/tensor_dog.jpg"],
     ["images/examples/wood_fire.jpg"],
     ["images/examples/mountain.jpg"],
     ["images/examples/trees.jpg"],
 ]
 
-source_images = [
+IMAGES_SAMPLES = [
     ["images/examples/pineapple.jpg"],
     ["images/examples/van.jpg"],
 ]
@@ -93,7 +98,6 @@ def create_tab(source_type: str, targets: List[str]):
             input_source: gr.Image = None
             if source_type == "webcam":
                 input_source = gr.Image(label="Webcam", source="webcam", streaming=True)
-                input_source.style(width=512, height=512, rounded=True)
             else:
                 input_source = gr.Image(
                     label="Image",
@@ -101,38 +105,33 @@ def create_tab(source_type: str, targets: List[str]):
                     type="file",
                     # tool="select",
                     # interactive=False,
-                    value=source_images[0][0],
+                    value=IMAGES_SAMPLES[0][0],
                 )
-                input_source.style(width=512, height=512, rounded=True)
-                create_dataset_selector(input_source, source_images)
+                create_dataset_selector(input_source, IMAGES_SAMPLES)
 
             input_style = gr.Image(
                 label="Style",
                 type="file",
                 # tool="select",
                 # interactive=False,
-                value=style_images[0][0],
+                value=IMAGES_STYLES[0][0],
             )
-            input_style.style(width=512, height=512, rounded=True)
-            create_dataset_selector(input_style, style_images)
+            create_dataset_selector(input_style, IMAGES_STYLES)
 
         with gr.Column():
-            output_stylized = gr.Image(
-                label="Stylized Output", type="pil"  # , shape=(256, 256)
-            )
-            # Previously 640x640
-            output_stylized.style(width=512, height=512, rounded=True)
+            output_stylized = gr.Image(label="Stylized Output", type="pil")
 
             input_target = gr.Radio(
                 choices=targets, value=targets[0], label="Compute Targets"
             )
 
             with gr.Row():
-                button_upload = gr.Button("Stylize", variant="secondary")
+                button_upload = gr.Button("Stylize", variant="primary")
 
-            output_latency = gr.Markdown("<h3>Latency: --.-- ms</h3>")
+            output_latency = gr.Markdown("<h3>Latency: -- ms</h3>")
 
-            gr.Markdown("Things about OctoML")
+            gr.Markdown(MARKDOWN_DETAILS)
+            gr.Markdown(MARKDOWN_FOOTER_LOGO)
 
         button_upload.click(
             stylize_webcam if source_type == "webcam" else stylize_upload,
@@ -141,12 +140,12 @@ def create_tab(source_type: str, targets: List[str]):
         )
 
 
-def create_app(targets: List[str]):
-    header = """
-    <img src="https://www.datocms-assets.com/45680/1655488521-logo_transparent_ai.png" width=200px height=100px align="left">
-    <center><h1>OctoML Style Transfer Demo</h1></center><center>Try the OctoML CLI! <a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a></center>
-    """
-    gr.Markdown(header)
+def create_demo(targets: List[str]):
+
+    with gr.Row():
+        gr.Markdown(MARKDOWN_LOGO)
+        gr.Markdown("     ")
+        gr.Markdown(MARKDOWN_HEADER)
 
     with gr.Tabs():
         with gr.TabItem("Upload Image"):
@@ -156,16 +155,18 @@ def create_app(targets: List[str]):
 
 
 if __name__ == "__main__":
-    # print("Sleeping 7 to wait for api, which is waiting for modelserver")
-    # import time
-    # time.sleep(7)
-    gr.close_all()
+
+    print("Sleeping 7 to wait for api, which is waiting for modelserver")
+    import time
+
+    time.sleep(7)
+
     try:
         targets = request_targets()
 
         demo = gr.Blocks()
         with demo:
-            create_app(targets)
+            create_demo(targets)
 
         demo.launch(
             server_name="0.0.0.0",
