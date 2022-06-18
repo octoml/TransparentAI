@@ -58,3 +58,29 @@ helm-install:
 helm-upgrade:
 	echo "upgradin"
 	cd deploy/helm && helm upgrade transparentai . -n transparentai
+
+bounce-api-frontend: 
+    echo "bouncing pods"
+    kubectl get pod -l app=transparentai-api
+    kubectl delete pod -l app=transparentai-api
+    sleep 2
+    kubectl get pod -l app=transparentai-imagefrontend
+    kubectl delete pod -l app=transparentai-imagefrontend
+    sleep 2
+    kubectl get pod
+
+validate-k8s-auth:
+	kubectl get pod
+
+validate-plausible-imagereg:
+	[ {{imageRegistry}} != images.octoml.ai ]
+
+validate-main:
+	[ $(git branch --show-current) = "main" ]
+
+
+validate-ready-to-deploy: validate-k8s-auth validate-plausible-imagereg validate-main
+	echo "validating deploy"
+
+roll-site: validate-ready-to-deploy docker-build push helm-upgrade bounce-api-frontend
+	echo "Bouncing/bounced"
