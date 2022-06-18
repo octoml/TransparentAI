@@ -16,8 +16,9 @@ API_URL_TARGETS = API_URL + "/targets"
 
 MARKDOWN_LOGO = """<img src="https://www.datocms-assets.com/45680/1655488521-logo_transparent_ai.png" width=200px height=100px>"""
 MARKDOWN_HEADER = """<h1>OctoML Style Transfer Demo</h1>Try the OctoML CLI! <a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a>"""
-MARKDOWN_DETAILS = """See the following links for more details.<ul><li><a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a></li><li><a href="https://github.com/octoml/octoml-cli-tutorials">OctoML CLI Tutorials</a></li><li><a href="https://github.com/octoml/TransparentAI">Transparent AI Sample Repo</a></li></ul>"""
+MARKDOWN_DETAILS = """Model acceleration provided by the OctoML.ai Machine Learning Deployment Platform.<br/>Instructions to build, accelerate and deploy this app to your laptop or in the cloud are provided in the following tutorials and documentation.<ul><li><a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a></li><li><a href="https://github.com/octoml/octoml-cli-tutorials">OctoML CLI Tutorials</a></li><li><a href="https://github.com/octoml/TransparentAI">Transparent AI Sample Repo</a></li></ul>"""
 MARKDOWN_FOOTER_LOGO = """<img src="https://www.datocms-assets.com/45680/1655488516-logo_octoml.png" width=80px align="right">"""
+MARKDOWN_LATENCY_DEFAULT = """<h3>Latency: -- ms</h3>"""
 
 IMAGES_STYLES = [
     ["images/examples/tensor_dog.jpg"],
@@ -33,10 +34,12 @@ IMAGES_SAMPLES = [
 
 
 def stylize_webcam(webcam_data, style_image, target):
+    if webcam_data is None:
+        return None, MARKDOWN_LATENCY_DEFAULT
     webcam_image = Image.fromarray(webcam_data)
     with BytesIO() as webcam_image_file:
         webcam_image.save(webcam_image_file, "JPEG")
-        webcam_image_name = f"webcam_{int(time())}"
+        webcam_image_name = f"webcam_{int(time.time())}"
         return request_stylize(
             webcam_image_name, webcam_image_file.getvalue(), style_image, target
         )
@@ -128,7 +131,7 @@ def create_tab(source_type: str, targets: List[str]):
             with gr.Row():
                 button_upload = gr.Button("Stylize", variant="primary")
 
-            output_latency = gr.Markdown("<h3>Latency: -- ms</h3>")
+            output_latency = gr.Markdown(MARKDOWN_LATENCY_DEFAULT)
 
             gr.Markdown(MARKDOWN_DETAILS)
             gr.Markdown(MARKDOWN_FOOTER_LOGO)
