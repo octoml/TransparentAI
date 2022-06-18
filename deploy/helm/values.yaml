@@ -1,25 +1,23 @@
 # Number of replicas for the Deployment
 replicas:
-  imagefrontend:  1
-  chat:   1
+  imagefrontend: 1
+  chat: 1
   taiapi: 1
-  api:  1
-  style:  1
-  gpt2:   1
-
+  api: 1
+  style: 1
+  gpt2: 1
 
 # Ports
-imagefrontendPort:  8888
-chatPort:       3000
-taiapiPort:     9000
-apiPort:        8050
-gpt2HttpPort:   8000
-gpt2GrpcPort:   8001
-gpt2PromPort:   8002
-styleHttpPort:   8000
-styleGrpcPort:   8001
-stylePromPort:   8002
-
+imagefrontendPort: 8888
+chatPort: 3000
+taiapiPort: 9000
+apiPort: 8050
+gpt2HttpPort: 8000
+gpt2GrpcPort: 8001
+gpt2PromPort: 8002
+styleHttpPort: 8000
+styleGrpcPort: 8001
+stylePromPort: 8002
 
 # Full path (url) to the image and the tag to use
 imageRegistry: gcr.io/octonaut-skrum
@@ -43,8 +41,14 @@ images:
     name: fullaccel-magenta_image_stylization-aws_g4dn.xlarge # this is optimzied, this is not what's made by `just docker-build` this is made by the octoml platform and is 20% faster than tensorflow and 70% fastert han onnx on a t4gpu (g4dn.xlarge)
     tag: latest
 
-# Hostname for the ingress
-hostname:
+ingress:
+  enabled: false
+  host: example.com
+  annotations: {}
+  ingressClassName: alb
+  path: /
+  pathType: Prefix
+  tls: []
 
 tolerations: []
 ## If you want to set tolerations, delete the `[]` in the line above
@@ -61,7 +65,6 @@ models:
   style:
     nodeSelector:
       node.kubernetes.io/instance-type: "g4dn.2xlarge"
-
 
 ## If you want to set node selector, delete the `{}` in the line above
 ## and uncomment/fill in this example block
