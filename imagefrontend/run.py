@@ -99,7 +99,7 @@ def create_tab(source_type: str, targets: List[str]):
                     label="Image",
                     source="upload",
                     type="file",
-                    tool="select",
+                    # tool="select",
                     # interactive=False,
                     value=source_images[0][0],
                 )
@@ -109,7 +109,7 @@ def create_tab(source_type: str, targets: List[str]):
             input_style = gr.Image(
                 label="Style",
                 type="file",
-                tool="select",
+                # tool="select",
                 # interactive=False,
                 value=style_images[0][0],
             )
@@ -144,7 +144,7 @@ def create_tab(source_type: str, targets: List[str]):
 def create_app(targets: List[str]):
     header = """
     <img src="https://www.datocms-assets.com/45680/1655488521-logo_transparent_ai.png" width=200px height=100px align="left">
-    <center><h1>OctoML Style Transfer Demo</h1><Try the OctoML CLI! <a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a></center>
+    <center><h1>OctoML Style Transfer Demo</h1></center><center>Try the OctoML CLI! <a href="https://try.octoml.ai/cli/">https://try.octoml.ai/cli/</a></center>
     """
     gr.Markdown(header)
 
