@@ -33,7 +33,7 @@
             "program": "run.py",
             "console": "integratedTerminal",
             "justMyCode": false,
-            "cwd": "${workspaceFolder}/imagefrontend",
+            "cwd": "${workspaceFolder}/frontend",
         },
     ]
 }
