@@ -1,20 +1,12 @@
 # Number of replicas for the Deployment
 replicas:
-  imagefrontend: 1
-  chat: 1
-  taiapi: 1
+  frontend: 1
   api: 1
   style: 1
-  gpt2: 1
 
 # Ports
-imagefrontendPort: 8888
-chatPort: 3000
-taiapiPort: 9000
+frontendPort: 8888
 apiPort: 8050
-gpt2HttpPort: 8000
-gpt2GrpcPort: 8001
-gpt2PromPort: 8002
 styleHttpPort: 8000
 styleGrpcPort: 8001
 stylePromPort: 8002
@@ -22,23 +14,16 @@ stylePromPort: 8002
 # Full path (url) to the image and the tag to use
 imageRegistry: gcr.io/octonaut-skrum
 images:
-  chat:
-    name: chat
-    tag: latest
-  imagefrontend:
-    name: imagefrontend
-    tag: latest
-  taiapi:
-    name: tai-api
+  frontend:
+    name: frontend
     tag: latest
   api:
     name: api
     tag: latest
-  gpt2:
-    name: gpt2
-    tag: latest
   style:
-    name: fullaccel-magenta_image_stylization-aws_g4dn.xlarge # this is optimzied, this is not what's made by `just docker-build` this is made by the octoml platform and is 20% faster than tensorflow and 70% fastert han onnx on a t4gpu (g4dn.xlarge)
+    # this is optimzied, this is not what's made by `just docker-build` 
+    # this is made by the octoml platform and is 20% faster than tensorflow and 70% fastert han onnx on a t4gpu (g4dn.xlarge)  
+    name: fullaccel-magenta_image_stylization-aws_g4dn.xlarge 
     tag: latest
 
 ingress:
@@ -59,9 +44,6 @@ tolerations: []
 #   effect: "NoSchedule"
 
 models:
-  gpt2:
-    nodeSelector:
-      node.kubernetes.io/instance-type: "g4dn.2xlarge"
   style:
     nodeSelector:
       node.kubernetes.io/instance-type: "g4dn.2xlarge"
@@ -90,9 +72,3 @@ enableExtraModels: true
 #  - style-gpu-unaccelerated
 #  - style-cpu-unaccelerated
 #  - style-cpu-accelerated
-
-# images
-# gcr.io/octonaut-skrum/style-gpu-unaccelerated
-# gcr.io/octonaut-skrum/style-cpu-unaccelerated
-# gcr.io/octonaut-skrum/style-gpu-accelerated
-# gcr.io/octonaut-skrum/style-cpu-accelerated

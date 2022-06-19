@@ -33,14 +33,14 @@ jobs:
         run: just docker-build
       - name: docker compose up
         run: docker-compose up -d
-      - name: sleep 100 # taiapi pulls a big file from the internet
-        run: sleep 100
+      - name: sleep 10
+        run: sleep 10
       - name: docker ps
         run: docker ps -a
+      - name: check model server
+        run: curl localhost:8000/v2/health/ready        
       - name: check frontend
         run: curl localhost:8888
-      - name: check inferenceserver
-        run: curl localhost:8000/v2/health/ready
       - name: check api
         run: curl localhost:8050
       - name: validate that helm chart can be packaged, this doesn't push it but does some sanity checking on the helm chart
