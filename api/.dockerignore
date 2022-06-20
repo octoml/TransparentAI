@@ -131,16 +131,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-*onnx/
-
 # Ignore downloaded models
-models/**/*.onnx
-
 *.octoml_cache
-node_modules
-tai-api/models/
-models/tensorflow_models/magenta_arbitrary-image-stylization-v1-256_2.tar.gz
-*.tar.gz
-flagged/*
-venv
-Dockerfile

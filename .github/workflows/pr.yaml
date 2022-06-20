@@ -15,33 +15,33 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
-      - name: setup just
+      - name: Setup Just - Command Runner
         uses: extractions/setup-just@v1
-      - name: Make parent dirs for octoml-bin
+      - name: OctoML CLI - Prepare target path
         run: mkdir -p target/debug
-      - name: Download octoml-bin (tar.gz)
+      - name: OctoML CLI - Download
         run: curl --fail ${{secrets.CLI_DOWNLOAD_LINK_UBUNTU}} --output octoml.tar.gz && tar xzf octoml.tar.gz && mv octoml target/debug/octoml
-      - name: Show Download
+      - name: OctoML CLI - Verify
         run: ls -lR target/debug/octoml
-      - name: chmod octoml bin
+      - name: OctoML CLI - Set Executable
         run: chmod 775 target/debug/octoml
-      - name: copy bin to /usr/bin
+      - name: OctoML CLI - Copy to Path
         run: sudo cp target/debug/octoml /usr/bin/
-      - name: print octoml version
+      - name: OctoML CLI - Print version
         run: octoml -V
-      - name: run docker build
+      - name: Docker - Run Build
         run: just docker-build
-      - name: docker compose up
+      - name: Docker - Compose up
         run: docker-compose up -d
-      - name: sleep 100 # taiapi pulls a big file from the internet
-        run: sleep 100
-      - name: docker ps
+      - name: Sleep 30
+        run: sleep 30
+      - name: Docker - Status
         run: docker ps -a
-      - name: check frontend
-        run: curl localhost:8888
-      - name: check inferenceserver
-        run: curl localhost:8000/v2/health/ready
-      - name: check api
+      - name: Check Model server
+        run: curl localhost:8000/v2/health/ready        
+      - name: Check Api
         run: curl localhost:8050
-      - name: validate that helm chart can be packaged, this doesn't push it but does some sanity checking on the helm chart
+      - name: Check Frontend
+        run: curl localhost:8888        
+      - name: Validate that helm chart can be packaged, this doesn't push it but does some sanity checking on the helm chart
         run: cd deploy/helm && helm package .

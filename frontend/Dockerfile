@@ -22,6 +22,5 @@ COPY . .
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --no-dev
 
-WORKDIR /srv/app/server
-CMD uvicorn main:app --host 0.0.0.0 --port 8050
-EXPOSE 8050
+CMD python run.py
+EXPOSE 8888

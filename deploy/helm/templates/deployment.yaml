@@ -3,25 +3,25 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}-imagefrontend
-  name: {{ .Release.Name }}-imagefrontend
+    app: {{ .Release.Name }}-frontend
+  name: {{ .Release.Name }}-frontend
   namespace: {{ .Release.Namespace }}
 spec:
-  replicas: {{ .Values.replicas.imagefrontend }}
+  replicas: {{ .Values.replicas.frontend }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-imagefrontend
+      app: {{ .Release.Name }}-frontend
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-imagefrontend
+        app: {{ .Release.Name }}-frontend
     spec:
       imagePullSecrets:
       - name: pull-secret
       containers:
-      - name: {{ .Release.Name }}-imagefrontend
+      - name: {{ .Release.Name }}-frontend
         imagePullPolicy: Always
-        image: "{{ .Values.imageRegistry }}/{{ .Values.images.imagefrontend.name}}:{{ .Values.images.imagefrontend.tag }}"
+        image: "{{ .Values.imageRegistry }}/{{ .Values.images.frontend.name}}:{{ .Values.images.frontend.tag }}"
         env:
         - name: API_HOST
           value: {{ .Release.Name }}-api
@@ -30,7 +30,7 @@ spec:
         - name: PYTHONUNBUFFERED
           value: "1"
         ports:
-        - containerPort: {{ .Values.imagefrontendPort}}
+        - containerPort: {{ .Values.frontendPort}}
           protocol: TCP
 ---
 apiVersion: apps/v1
@@ -64,8 +64,6 @@ spec:
           value: {{ .Release.Name }}-style-cpu-unaccelerated:{{ .Values.styleHttpPort}}
         - name: MODEL_NAME
           value: "magenta_arbitrary-image-stylization-v1"
-          #value: "magenta_arbitrary-image-stylization-v1-256_2"
-          #value: "magenta_arbitrary_image_stylization_v1_256_2_tar_gz"
         ports:
         - containerPort: {{ .Values.apiPort}}
           protocol: TCP
@@ -73,138 +71,10 @@ spec:
         - name: config
           mountPath: "/config"
           readOnly: true
-      # TODO mount the config map (extra or regular) based on if extra is turned on
       volumes:
       - name: config
         configMap:
           name: api-config-extra
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: {{ .Release.Name }}-chat
-  name: {{ .Release.Name }}-chat
-  namespace: {{ .Release.Namespace }}
-spec:
-  replicas: {{ .Values.replicas.chat }}
-  selector:
-    matchLabels:
-      app: {{ .Release.Name }}-chat
-  template:
-    metadata:
-      labels:
-        app: {{ .Release.Name }}-chat
-    spec:
-      imagePullSecrets:
-      - name: pull-secret
-      containers:
-      - name: {{ .Release.Name }}-chat
-        imagePullPolicy: Always
-        image: "{{ .Values.imageRegistry }}/{{ .Values.images.chat.name}}:{{ .Values.images.chat.tag }}"
-        env:
-        - name: TAI_API_HOST #TODO better service discovery
-          value: {{ .Release.Name }}-taiapi
-        ports:
-        - containerPort: {{ .Values.chatPort}}
-          protocol: TCP
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: {{ .Release.Name }}-taiapi
-  name: {{ .Release.Name }}-taiapi
-  namespace: {{ .Release.Namespace }}
-spec:
-  replicas: {{ .Values.replicas.taiapi }}
-  selector:
-    matchLabels:
-      app: {{ .Release.Name }}-taiapi
-  template:
-    metadata:
-      labels:
-        app: {{ .Release.Name }}-taiapi
-    spec:
-      imagePullSecrets:
-      - name: pull-secret
-      containers:
-      - name: {{ .Release.Name }}-taiapi
-        image: "{{ .Values.imageRegistry }}/{{ .Values.images.taiapi.name}}:{{ .Values.images.taiapi.tag }}"
-        imagePullPolicy: Always
-        env:
-        - name: OCTO_HOST #TODO better service discovery
-          value: {{ .Release.Name }}-gpt2
-        ports:
-        - containerPort: {{ .Values.taiapiPort}}
-          protocol: TCP
-        resources:
-          requests:
-            memory: "4Gi"
-            ephemeral-storage: "8Gi"
-            cpu: "4"
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: {{ .Values.taiapiPort}}
-          initialDelaySeconds: 5
-          failureThreshold: 60 # 60 seconds
-          periodSeconds: 1
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: {{ .Release.Name }}-gpt2
-  name: {{ .Release.Name }}-gpt2
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    prometheus.io/path: "/metrics"
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: "{{ .Values.gpt2PromPort }}"
-spec:
-  replicas: {{ .Values.replicas.gpt2 }}
-  selector:
-    matchLabels:
-      app: {{ .Release.Name }}-gpt2
-  template:
-    metadata:
-      labels:
-        app: {{ .Release.Name }}-gpt2
-        octoml.ai/inference: triton
-    spec:
-      imagePullSecrets:
-      - name: pull-secret
-      containers:
-      - name: {{ .Release.Name }}-gpt2
-        imagePullPolicy: Always
-        image: "{{ .Values.imageRegistry }}/{{ .Values.images.gpt2.name}}:{{ .Values.images.gpt2.tag }}"
-        command:
-        - tritonserver
-        args:
-        - --model-repository=octoml/models
-        - --strict-model-config=false
-        ports:
-        - containerPort: {{ .Values.gpt2HttpPort}}
-          name: http
-          protocol: TCP
-        - containerPort: {{ .Values.gpt2GrpcPort}}
-          name: grpc
-          protocol: TCP
-        - containerPort: {{ .Values.gpt2PromPort}}
-          name: metrics
-          protocol: TCP
-        resources:
-          limits:
-            nvidia.com/gpu: 1 # requesting 1 GPU
-      {{- if .Values.models.gpt2.tolerations }}
-      tolerations:
-{{ toYaml .Values.models.gpt2tolerations | indent 6 }}
-      {{- end }}
-      {{- if .Values.models.gpt2.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.models.gpt2.nodeSelector | indent 8 }}
-      {{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment

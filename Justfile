@@ -19,8 +19,8 @@ docker-build:
 	echo Building docker images
 
 	echo Building Frontend
-	cd imagefrontend && docker build -t transparent-ai/imagefrontend .
-	docker tag transparent-ai/imagefrontend {{imageRegistry}}/imagefrontend
+	cd frontend && docker build -t transparent-ai/frontend .
+	docker tag transparent-ai/frontend {{imageRegistry}}/frontend
 
 	echo Building Model server
 	rm -fr .octoml_cache
@@ -39,7 +39,7 @@ docker-build:
 push:
 	docker push {{imageRegistry}}/api
 	docker push {{imageRegistry}}/style
-	docker push {{imageRegistry}}/imagefrontend
+	docker push {{imageRegistry}}/frontend
 
 # up localdev
 compose-up:

@@ -35,11 +35,11 @@ spec:
               service:
                 name: {{ .Release.Name }}
                 port:
-                  number: {{ .Values.imagefrontendPort }}
+                  number: {{ .Values.frontendPort }}
             pathType: {{ .Values.ingress.pathType }}
             {{ else }}
               serviceName: {{ .Release.Name }}
-              servicePort: {{ .Values.imagefrontendPort }}
+              servicePort: {{ .Values.frontendPort }}
             {{- end }}
     {{- end }}
 {{- end }}
