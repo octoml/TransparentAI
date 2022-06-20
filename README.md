@@ -2,6 +2,19 @@
 
 An example application of how to use OctoML to build an application.
 
+## Quickstart & Tutorials
+
+We've built out several tutorials using this application as a base:
+
+| Name | Audience | Time | Contents |
+|--------------|-----------|------------|-|
+| [QuickStart](tutorials/quickstart.md) | Everyone | 5 Minutes        | Quickstart |
+| [Developer](tutorials/developer.md) | AI/ML Developers | 1 Hr | Pre/Post Processing, Packaging, Acceleration |
+| [Deploy to Cloud](tutorials/deploy_to_cloud.md) | Operations | 1 Hr | Cloud, Observability, Packaging, Acceleration |
+
+
+
+
 ### Getting Started
 
 Install [Just](https://github.com/casey/just) (I (Jared) refuse to use Make).
