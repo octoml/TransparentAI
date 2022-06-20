@@ -5,14 +5,13 @@ services:
     environment:
       API_HOST: api
       API_PORT: 8050
-      PYTHONUNBUFFERED: 1
     ports:
       - "8888:8888"
+    depends_on:
+      - api      
   api: # Model API which includes pre and post processing
     image: transparent-ai/api
     environment:
-      TARGET_ENDPOINT: "http://style:8000"
-      TARGET_MODEL: "magenta_image_stylization"
       TARGET_ENDPOINT_CPU_NORMAL: "http://style:8000"
       TARGET_NAME_CPU_NORMAL: "magenta_image_stylization"
       TARGET_ENDPOINT_CPU_OPTIMIZED: "http://style:8000"
@@ -23,6 +22,8 @@ services:
       TARGET_MODEL_GPU_OPTIMIZED: "magenta_image_stylization"
     ports:
       - "8050:8050"
+    depends_on:
+      - style
   style: # Model runtime containerized by OctoML CLI into a NVIDIA Triton™ Inference Server
     image: transparent-ai/style
     ports:
