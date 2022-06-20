@@ -22,14 +22,14 @@ def get_remote_model() -> TritonRemoteModel:
 
 image_base_path = path.abspath(path.join(path.dirname(__file__), "../tests/data/"))
 
-image_content_file = path.join(image_base_path, "Source_Golden_Gate.jpg")
+image_content_file = path.join(image_base_path, "image_adelbert_slack.jpg")
 image_content_array = image_to_normalized_ndarray(
     image_crop_center(
         Image.open(image_content_file), MODEL_IMAGE_WIDTH, MODEL_IMAGE_HEIGHT
     )
 )
 
-image_style_file = path.join(image_base_path, "Style_Kanagawa.jpg")
+image_style_file = path.join(image_base_path, "style_tensor_dog.jpg")
 image_style_array = image_to_normalized_ndarray(
     image_crop_center(
         Image.open(image_style_file), MODEL_IMAGE_WIDTH, MODEL_IMAGE_HEIGHT
@@ -39,7 +39,7 @@ image_style_array = image_to_normalized_ndarray(
 model = get_remote_model()
 result = model(placeholder=image_content_array, placeholder_1=image_style_array)
 result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
-result_image.save("styled.jpg")
+result_image.save(path.join(image_base_path, "../stylized_test.jpg"))
 if getenv("LOOP"):
     i = 0
     while True:

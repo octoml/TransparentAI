@@ -19,11 +19,13 @@ from utils.image import (
 )
 from utils.triton import TritonRemoteModel
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 CONFIG_FILE = os.getenv("CONFIG_FILE", "../config.yaml")
 config = load_config(CONFIG_FILE)
+if not config.targets:
+    raise RuntimeError("No target models provided")
 
 
 @dataclass(frozen=True)
@@ -32,8 +34,10 @@ class TargetModel:
     model: TritonRemoteModel
 
 
-print("Waiting 5 for triton to start")
-time.sleep(5)  # Wait for triton to be running
+# Wait for triton to be running
+logger.info("Waiting 5 for triton to start")
+time.sleep(5)
+
 target_models: Dict[str, TritonRemoteModel] = dict()
 for target_name, target_config in config.targets.items():
     target_url = f"{target_config.host}:{target_config.port}"
@@ -48,6 +52,7 @@ for target_name, target_config in config.targets.items():
         raise
     target_models[target_name] = target_model
 
+
 app = FastAPI()
 
 
@@ -60,9 +65,9 @@ def get_targets() -> List[str]:
 async def generate_image(
     source_image: UploadFile,
     style_image: UploadFile,
-    target: str = "default",
+    target: str = None,
 ):
-    model = target_models.get(target)
+    model = target_models.get(target) if target else next(iter(target_models.values()))
     if not model:
         return JSONResponse(status_code=404, content={"message": "Target not found"})
 

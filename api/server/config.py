@@ -53,11 +53,3 @@ def _load_env_property(loader, node):
         default_value = tags[1] if len(tags) > 1 else ""
         value = environ.get(env_var.upper(), default_value)
     return value
-
-
-if __name__ == "__main__":
-    environ.setdefault(
-        "TARGET_ENDPOINT_CPU_OPTIMIZED", "http://host1.docker.internal:8001"
-    )
-    config = load_config()
-    print(config)

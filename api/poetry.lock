@@ -104,7 +104,7 @@ python-versions = "*"
 
 [[package]]
 name = "certifi"
-version = "2022.5.18.1"
+version = "2022.6.15"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
@@ -145,7 +145,7 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "colorama"
-version = "0.4.4"
+version = "0.4.5"
 description = "Cross-platform colored terminal text."
 category = "main"
 optional = false
@@ -467,15 +467,15 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pylint"
-version = "2.14.1"
+version = "2.14.3"
 description = "python code static checker"
 category = "dev"
 optional = false
 python-versions = ">=3.7.2"
 
 [package.dependencies]
-astroid = ">=2.11.5,<=2.12.0-dev0"
-colorama = {version = "*", markers = "sys_platform == \"win32\""}
+astroid = ">=2.11.6,<=2.12.0-dev0"
+colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
 dill = ">=0.2"
 isort = ">=4.2.5,<6"
 mccabe = ">=0.6,<0.8"
@@ -625,7 +625,7 @@ python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "tritonclient"
-version = "2.22.3"
+version = "2.22.4"
 description = "Python client library and utilities for communicating with Triton Inference Server"
 category = "main"
 optional = false
@@ -754,8 +754,8 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.8"
-content-hash = "8d147f1d8da48921d1da4ae19776c483ba3ab418cb0f6cf4271e706b71454297"
+python-versions = "~3.8"
+content-hash = "c79dd13a63a6fe0ba9327a5e0d22c271bf9db1808c70d8dc06d6e9a3777cfd8a"
 
 [metadata.files]
 anyio = [
@@ -872,8 +872,8 @@ brotli = [
     {file = "Brotli-1.0.9.zip", hash = "sha256:4d1b810aa0ed773f81dceda2cc7b403d01057458730e309856356d4ef4188438"},
 ]
 certifi = [
-    {file = "certifi-2022.5.18.1-py3-none-any.whl", hash = "sha256:f1d53542ee8cbedbe2118b5686372fb33c297fcd6379b050cca0ef13a597382a"},
-    {file = "certifi-2022.5.18.1.tar.gz", hash = "sha256:9c5705e395cd70084351dd8ad5c41e65655e08ce46f2ec9cf6c2c08390f71eb7"},
+    {file = "certifi-2022.6.15-py3-none-any.whl", hash = "sha256:fe86415d55e84719d75f8b69414f6438ac3547d2078ab91b67e779ef69378412"},
+    {file = "certifi-2022.6.15.tar.gz", hash = "sha256:84c85a9078b11105f04f3036a9482ae10e4621616db313fe045dd24743a0820d"},
 ]
 cffi = [
     {file = "cffi-1.15.0-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:c2502a1a03b6312837279c8c1bd3ebedf6c12c4228ddbad40912d671ccc8a962"},
@@ -936,8 +936,8 @@ click = [
     {file = "click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
 ]
 colorama = [
-    {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
-    {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+    {file = "colorama-0.4.5-py2.py3-none-any.whl", hash = "sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da"},
+    {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
 ]
 dill = [
     {file = "dill-0.3.5.1-py2.py3-none-any.whl", hash = "sha256:33501d03270bbe410c72639b350e941882a8b0fd55357580fbc873fba0c59302"},
@@ -1415,8 +1415,8 @@ pyflakes = [
     {file = "pyflakes-2.4.0.tar.gz", hash = "sha256:05a85c2872edf37a4ed30b0cce2f6093e1d0581f8c19d7393122da7e25b2b24c"},
 ]
 pylint = [
-    {file = "pylint-2.14.1-py3-none-any.whl", hash = "sha256:bb71e6d169506de585edea997e48d9ff20c0dc0e2fbc1d166bad6b640120326b"},
-    {file = "pylint-2.14.1.tar.gz", hash = "sha256:549261e0762c3466cc001024c4419c08252cb8c8d40f5c2c6966fea690e7fe2a"},
+    {file = "pylint-2.14.3-py3-none-any.whl", hash = "sha256:6757a027e15816be23625b079ebc45464e4c9d9dde0c826d18beee53fe22a2e7"},
+    {file = "pylint-2.14.3.tar.gz", hash = "sha256:4e1378f815c63e7e44590d0d339ed6435f5281d0a0cc357d29a86ea0365ef868"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
@@ -1532,9 +1532,9 @@ tomlkit = [
     {file = "tomlkit-0.11.0.tar.gz", hash = "sha256:71ceb10c0eefd8b8f11fe34e8a51ad07812cb1dc3de23247425fbc9ddc47b9dd"},
 ]
 tritonclient = [
-    {file = "tritonclient-2.22.3-py3-none-any.whl", hash = "sha256:7cc4fc60bf435669d9c940af884fbdfd504f299943b115e5ad7ad25da315dc20"},
-    {file = "tritonclient-2.22.3-py3-none-manylinux1_x86_64.whl", hash = "sha256:467c598ce32660c711c1378d28f744fde4c752ffbba60ca175d156b65fece4ed"},
-    {file = "tritonclient-2.22.3-py3-none-manylinux2014_aarch64.whl", hash = "sha256:35747727e2ab3ac8fe6127211ab6f701988122b36a441e04f190e6153468b6cd"},
+    {file = "tritonclient-2.22.4-py3-none-any.whl", hash = "sha256:9876e938f7a7926ffbafbf517ffa7d102e07739decf245c53eb506bc9e9cbffa"},
+    {file = "tritonclient-2.22.4-py3-none-manylinux1_x86_64.whl", hash = "sha256:c592d4665095f7ccaaa27d9ca4aae97025b31302ea940b342c2fbba3663fbdcf"},
+    {file = "tritonclient-2.22.4-py3-none-manylinux2014_aarch64.whl", hash = "sha256:6b22acc9dea5a05240b7f388c69fe1a05ab5fd9cf0204b875ad76e4c3e362c6b"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.2.0-py3-none-any.whl", hash = "sha256:6657594ee297170d19f67d55c05852a874e7eb634f4f753dbd667855e07c1708"},
