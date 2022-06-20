@@ -25,6 +25,7 @@ IMAGES_STYLES = [
     ["images/examples/wood_fire.jpg"],
     ["images/examples/mountain.jpg"],
     ["images/examples/trees.jpg"],
+    ["images/examples/octo_drawing.jpg"]
 ]
 
 IMAGES_SAMPLES = [
