@@ -9,9 +9,9 @@ We've built out several tutorials using this application as a base:
 
 | Name | Audience | Time | Contents |
 |--------------|-----------|------------|-|
-| [QuickStart](tutorials/quickstart.md) | Everyone | 5 Minutes        | Quickstart |
-| [Developer](tutorials/developer.md) | AI/ML Developers | 1 Hr | Pre/Post Processing, Packaging, Acceleration |
-| [Deploy to Cloud](tutorials/deploy_to_cloud.md) | Operations | 1 Hr | Cloud, Observability, Packaging, Acceleration |
+| [QuickStart](tutorials/quickstart.md) | Everyone | Quickstart |
+| [Developer](tutorials/developer.md) | AI/ML Developers | Pre/Post Processing, Packaging, Acceleration |
+| [Deploy to Cloud](tutorials/deploy_to_cloud.md) | Operations | Cloud, Observability, Packaging, Acceleration |
 
 ## Dependencies
 
