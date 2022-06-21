@@ -108,6 +108,7 @@ c5n.xlarge
 ```
 
 To get optimal performance ensure that your cluster has at least one of these instance types.
+You can follow instructions [here](https://github.com/octoml/TransparentAI/blob/cloud_tutorial/tutorials/quickstart.md#acceleration) on how to accelerate models for any hardware type supported by `octoml hardware`.
 
 
 Change directory to the helm chart.
@@ -141,7 +142,7 @@ models:
       node.kubernetes.io/instance-type: "g4dn.2xlarge"
 ```
 
-Change `enableExtraModels` to false:
+Change `enableExtraModels` to false. This prevents prevents extra copies of the model serving container from coming up with unaccellerated models.
 
 Change:
 
