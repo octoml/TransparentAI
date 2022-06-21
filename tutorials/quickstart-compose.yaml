@@ -1,0 +1,33 @@
+version: "3.3"
+services:
+  frontend: # The App
+    image: quay.io/transparentai/frontend
+    environment:
+      API_HOST: api
+      API_PORT: 8050
+    ports:
+      - "8888:8888"
+    depends_on:
+      - api
+  api: # Model API which includes pre and post processing
+    image: quay.io/transparentai/api
+    environment:
+      TARGET_ENDPOINT_CPU_NORMAL: "http://style:8000"
+      TARGET_NAME_CPU_NORMAL: "magenta_image_stylization"
+      TARGET_ENDPOINT_CPU_OPTIMIZED: "http://style:8000"
+      TARGET_MODEL_CPU_OPTIMIZED: "magenta_image_stylization"
+      TARGET_ENDPOINT_GPU_NORMAL: "http://style:8000"
+      TARGET_MODEL_GPU_NORMAL: "magenta_image_stylization"
+      TARGET_ENDPOINT_GPU_OPTIMIZED: "http://style:8000"
+      TARGET_MODEL_GPU_OPTIMIZED: "magenta_image_stylization"
+    ports:
+      - "8050:8050"
+    depends_on:
+      - style
+  style: # Model runtime containerized by OctoML CLI into a NVIDIA Triton™ Inference Server
+    image: quay.io/transparentai/style-cpu-unaccelerated
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+    command: tritonserver --model-repository=octoml/models --strict-model-config=false
