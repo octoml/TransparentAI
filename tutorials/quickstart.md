@@ -49,7 +49,7 @@ tutorials-api-1       | INFO:     172.24.0.4:46714 - "POST /stylize?target=cpu H
 tutorials-api-1       | INFO:     172.24.0.4:46714 - "POST /stylize/?target=cpu HTTP/1.1" 200 OK
 ```
 
-> Note: If you are on an M1 Mac the docker image for the `style` container needs to be changed to run on arm. Use `quay.io/transparentai/expressaccel-magenta_image_stylization-aws_m6g.xlarge` instead. This image while designed for graviton works on M1 Macs.
+> Note: If you are on an M1 Mac the docker image for the `style` container needs to be changed to run on arm. Use `quay.io/transparentai/noaccel-magenta_image_stylization-mac_m1` instead. This image while designed for graviton works on M1 Macs.
 
 You can then navigate to [http://localhost:8888](http://localhost:8888) to use the application.
 
