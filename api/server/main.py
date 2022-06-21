@@ -13,19 +13,24 @@ from PIL import Image
 from config import TargetConfig, load_config
 from model import MODEL_IMAGE_HEIGHT, MODEL_IMAGE_WIDTH
 from utils.image import (
+    image_apply_watermark,
     image_crop_center,
     image_from_normalized_ndarray,
     image_to_normalized_ndarray,
 )
 from utils.triton import TritonRemoteModel
 
-# logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 CONFIG_FILE = os.getenv("CONFIG_FILE", "../config.yaml")
 config = load_config(CONFIG_FILE)
 if not config.targets:
     raise RuntimeError("No target models provided")
+
+WATERMARK_SIZE = (25, 25)
+WATERMARK = os.getenv("WATERMARK")
+if WATERMARK is not None:
+    os.stat("assets/" + WATERMARK)
 
 
 @dataclass(frozen=True)
@@ -83,6 +88,10 @@ async def generate_image(
 
     result = model(placeholder=source_image_array, placeholder_1=style_image_array)
     result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
+    if WATERMARK:
+        result_image = image_apply_watermark(
+            result_image, os.path.join("assets/" + WATERMARK), WATERMARK_SIZE
+        )
 
     with BytesIO() as response_stream:
         result_image.save(response_stream, "JPEG")
