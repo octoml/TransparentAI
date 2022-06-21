@@ -128,3 +128,5 @@ dmypy.json
 *.octoml_cache
 models/tensorflow_models/
 pull-secret.json
+
+api/server/env.sh
