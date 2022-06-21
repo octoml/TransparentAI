@@ -30,3 +30,13 @@ def image_from_normalized_ndarray(arr: np.ndarray) -> Image:
     arr = np.uint8(arr * 255)
     image = Image.fromarray(arr)
     return image
+
+
+def watermark_image(watermark: str, image: Image) -> Image:
+    tai_logo = Image.open('assets/' + watermark, 'r').convert('RGBA')
+    tai_w, tai_h = tai_logo.size
+    w, h = image.size
+    offset = (w-tai_w, h-tai_h) # place in bottom right corner
+    image.paste(tai_logo, offset, tai_logo)
+    return image
+
