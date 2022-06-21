@@ -17,7 +17,10 @@ We've built out several tutorials using this application as a base:
 
 ### Getting Started
 
-Install [Just](https://github.com/casey/just) (I (Jared) refuse to use Make).
+The Transparent AI demo uses [Just](https://github.com/casey/just) to build
+the application containers and launch deployments. It also requires the
+[`octoml`](https://try.octoml.ai/cli/) command line interface tool that's
+used for packaging, accelerating, and managing models.
 
 To get up and running:
 
