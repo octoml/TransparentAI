@@ -6,7 +6,7 @@ What you'll do in this tutorial:
 
 * Launch the app with `docker-compose`
 * Package a model using the `octoml` cli
-* Modify pre-processing done at the `app` layer
+* Modify processing done at the `api` layer
 * Redeploy the app (locally) with `docker-compose`
 
 ## Overview
@@ -19,7 +19,6 @@ The Transparent AI application is structured into the following 3 components
 
 3. ML models optimized for a set of deployment targets via the [OctoML CLI](https://try.octoml.ai/cli/) which also packaged them into a container consisting of the [NVIDIA Triton™ Inference Server](https://github.com/triton-inference-server) for convenient local testing or cloud deployment.
 
-
 ## Local Setup
 
 1. Ensure that your development machine has the dependencies called out in the [README](../README.md).
@@ -31,5 +30,19 @@ The Transparent AI application is structured into the following 3 components
 4. Execute `docker-compose up` in the /transparentai folder. This will build the frontend and api server and create a docker-compose environment which includes the model container built in step 3.
 5. You should now have a frontend webapp available at `http://localhost:8888`. The api server is directly available at `http://localhost:8050`
 
+## Modify and Redeploy
 
+Let's add a post-processing grayscale step to the image created by our app.
+1. Go to api/main.py and inspect the `generate_image` method.
+2. Add the following at line 86
+    ```
+    result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
+    result_image = result_image.convert("L")
+    ```
+3. Build the container via `docker-compose build`
+4. Redeploy via `docker-compose up`
+5. Verify that the stylized image is now in grayscale
 
+## Notes
+
+If using [Visual Studio Code](https://code.visualstudio.com/) as your development editor, the repository includes settings and a development container configuration.
