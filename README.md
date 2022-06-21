@@ -15,8 +15,8 @@ We've built out several tutorials using this application as a base:
 
 ## Dependencies
 
-The application requires the following dependencies.
 
-- [Just](https://github.com/casey/just)
-- [Python 3.7+](https://www.python.org/downloads/)
-- [Docker](https://docs.docker.com/get-docker/)
+The Transparent AI demo uses [Just](https://github.com/casey/just) to build
+the application containers and launch deployments. It also requires the
+[`octoml`](https://try.octoml.ai/cli/) command line interface tool that's
+used for packaging, accelerating, and managing models.
