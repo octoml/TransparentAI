@@ -64,6 +64,8 @@ spec:
           value: {{ .Release.Name }}-style-cpu-unaccelerated:{{ .Values.styleHttpPort}}
         - name: MODEL_NAME
           value: "magenta_arbitrary-image-stylization-v1"
+        - name: WATERMARK
+          value: "octoml_logo.png"
         ports:
         - containerPort: {{ .Values.apiPort}}
           protocol: TCP
