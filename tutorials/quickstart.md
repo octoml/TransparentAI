@@ -78,6 +78,12 @@ Change directory (`cd`) to the directory containing the models.
 cd ../models/tensorflow_models
 ```
 
+Run download script to pull down the model file:
+
+```bash
+wget https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2?tf-hub-format=compressed -O models/tensorflow_models/magenta_arbitrary-image-stylization-v1-256_2.tar.gz
+```
+
 Inspect the `octoml.yaml` config file. Note that in many cases you do not need to provide the shapes to the model. Try using `octoml init` on your own model to see it in action.
 
 ```bash
