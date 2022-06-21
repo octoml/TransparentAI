@@ -17,6 +17,6 @@ We've built out several tutorials using this application as a base:
 
 The application requires the following dependencies.
 
-- [Just - Command Runner](https://github.com/casey/just)
-- [Docker](https://docs.docker.com/get-docker/)
+- [Just](https://github.com/casey/just)
 - [Python 3.7+](https://www.python.org/downloads/)
+- [Docker](https://docs.docker.com/get-docker/)

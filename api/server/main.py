@@ -35,8 +35,8 @@ class TargetModel:
 
 
 # Wait for triton to be running
-logger.info("Waiting 5 for triton to start")
-time.sleep(5)
+logger.info("Waiting 10 seconds for model server.")
+time.sleep(10)
 
 target_models: Dict[str, TritonRemoteModel] = dict()
 for target_name, target_config in config.targets.items():
