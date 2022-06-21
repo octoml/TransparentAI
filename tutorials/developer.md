@@ -6,7 +6,7 @@ What you'll do in this tutorial:
 
 * Launch the app with `docker-compose`
 * Package a model using the `octoml` cli
-* Modify processing done at the `api` layer
+* Modify work done at the pre and post processing `ppp` api layer
 * Redeploy the app (locally) with `docker-compose`
 
 ## Overview

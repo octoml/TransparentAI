@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-  frontend: # Frontend
+  frontend: # The App
     image: transparent-ai/frontend
     build: ./frontend
     environment:
@@ -10,7 +10,7 @@ services:
       - "8888:8888"
     depends_on:
       - api
-  api: # API which includes pre and post processing
+  api: # The pre/post-processing API layer
     image: transparent-ai/api
     build: ./api
     environment:

@@ -29,7 +29,7 @@ compose-down:
 	docker-compose down
 
 # explicity build images
-docker-build:
+docker-build: build-model
 	echo Tagging Model Server
 	docker tag magenta_image_stylization-local {{imageRegistry}}/style
 
