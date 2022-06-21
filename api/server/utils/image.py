@@ -1,8 +1,9 @@
+from typing import Optional, Tuple
+
 import numpy as np
 from PIL import Image
 
 
-# TODO-gaz verify this
 def image_crop_center(image: Image, target_width: int, target_height: int) -> Image:
     if image.mode != "RGB":
         image = image.convert("RGB")
@@ -32,11 +33,15 @@ def image_from_normalized_ndarray(arr: np.ndarray) -> Image:
     return image
 
 
-def watermark_image(watermark: str, image: Image) -> Image:
-    tai_logo = Image.open('assets/' + watermark, 'r').convert('RGBA')
-    tai_w, tai_h = tai_logo.size
-    w, h = image.size
-    offset = (w-tai_w, h-tai_h) # place in bottom right corner
-    image.paste(tai_logo, offset, tai_logo)
+def image_apply_watermark(
+    image: Image, watermark_path: str, watermark_size: Optional[Tuple[int, int]] = None
+) -> Image:
+    watermark = Image.open(watermark_path, "r").convert("RGBA")
+    if watermark_size:
+        watermark = watermark.resize(watermark_size)
+    src_w, src_h = image.size
+    watermark_w, watermark_h = watermark.size
+    # place in bottom right corner
+    offset = (max(src_w - watermark_w, 0), max(src_h - watermark_h, 0))
+    image.paste(watermark, offset, watermark)
     return image
-
