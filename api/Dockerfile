@@ -17,11 +17,12 @@ ENV PATH="${PATH}:/root/.poetry/bin"
 
 RUN mkdir -p /srv/app
 WORKDIR /srv/app
-COPY . .
 
+COPY pyproject.toml poetry.lock /
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --no-dev
 
+COPY . .
 WORKDIR /srv/app/server
 CMD uvicorn main:app --host 0.0.0.0 --port 8050
 EXPOSE 8050

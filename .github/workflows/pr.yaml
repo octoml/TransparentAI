@@ -29,9 +29,9 @@ jobs:
         run: sudo cp target/debug/octoml /usr/bin/
       - name: OctoML CLI - Print version
         run: octoml -V
-      - name: Docker - Run Build
-        run: just docker-build
-      - name: Docker - Compose up
+      - name: Build Model Container
+        run: just build-model
+      - name: Docker - Compose Up
         run: docker-compose up -d
       - name: Sleep 30
         run: sleep 30

@@ -160,10 +160,10 @@ def create_demo(targets: List[str]):
 
 if __name__ == "__main__":
 
-    print("Sleeping 7 to wait for api, which is waiting for modelserver")
+    # Sleeping 15 seconds to wait for api, which is waiting for modelserver.
     import time
 
-    time.sleep(7)
+    time.sleep(15)
 
     try:
         targets = request_targets()

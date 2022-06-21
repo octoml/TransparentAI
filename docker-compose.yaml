@@ -2,15 +2,17 @@ version: "3.3"
 services:
   frontend: # The App
     image: transparent-ai/frontend
+    build: ./frontend
     environment:
       API_HOST: api
       API_PORT: 8050
     ports:
       - "8888:8888"
     depends_on:
-      - api      
-  api: # Model API which includes pre and post processing
+      - api
+  api: # The pre/post-processing API layer
     image: transparent-ai/api
+    build: ./api
     environment:
       TARGET_ENDPOINT_CPU_NORMAL: "http://style:8000"
       TARGET_NAME_CPU_NORMAL: "magenta_image_stylization"

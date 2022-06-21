@@ -17,10 +17,12 @@ ENV PATH="${PATH}:/root/.poetry/bin"
 
 RUN mkdir -p /srv/app
 WORKDIR /srv/app
-COPY . .
 
+COPY pyproject.toml poetry.lock /
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --no-dev
+
+COPY . .
 
 CMD python run.py
 EXPOSE 8888
