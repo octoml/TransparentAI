@@ -51,6 +51,14 @@ docker-push:
 	docker push {{imageRegistry}}/api
 	docker push {{imageRegistry}}/frontend
 
+quay-docker-push:
+	docker tag {{imageRegistry}}/style quay.io/transparentai/style
+	docker tag {{imageRegistry}}/api quay.io/transparentai/api
+	docker tag {{imageRegistry}}/frontend quay.io/transparentai/frontend
+	docker push quay.io/transparentai/style
+	docker push quay.io/transparentai/api
+	docker push quay.io/transparentai/frontend
+
 # install helm chart for the first time
 helm-install:
 	echo "did you create the pull-secret? See readme"
@@ -66,8 +74,8 @@ bounce-api-frontend:
     kubectl get pod -l app=transparentai-api
     kubectl delete pod -l app=transparentai-api
     sleep 2
-    kubectl get pod -l app=transparentai-imagefrontend
-    kubectl delete pod -l app=transparentai-imagefrontend
+    kubectl get pod -l app=transparentai-frontend
+    kubectl delete pod -l app=transparentai-frontend
     sleep 2
     kubectl get pod
 
@@ -83,5 +91,5 @@ validate-main:
 validate-ready-to-deploy: validate-k8s-auth validate-plausible-imagereg validate-main
 	echo "validating deploy"
 
-roll-site: validate-ready-to-deploy docker-build docker-push helm-upgrade bounce-api-frontend
+roll-site: validate-ready-to-deploy docker-build docker-push quay-docker-push helm-upgrade bounce-api-frontend
 	echo "Bouncing/bounced"
