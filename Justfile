@@ -20,8 +20,12 @@ build-model:
 	cd models/tensorflow_models && octoml package -i
 	docker tag magenta_image_stylization-local transparent-ai/style
 
+# local development - compose build
+compose-build:
+	docker-compose build
+
 # local development - compose up
-compose-up:
+compose-up: compose-build
 	docker-compose up -d
 
 # local development - compose down

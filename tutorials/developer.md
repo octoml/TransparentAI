@@ -33,15 +33,27 @@ The Transparent AI application is structured into the following 3 components
 ## Modify and Redeploy
 
 Let's add a post-processing grayscale step to the image created by our app.
-1. Go to api/main.py and inspect the `generate_image` method.
-2. Add the following at line 86
+1. Go to utils/image.py and create an `image_to_grayscale` method.
     ```
-    result_image = image_from_normalized_ndarray(np.squeeze(result[0]))
-    result_image = result_image.convert("L")
+    def image_to_grayscale(image: Image) -> Image:
+        return image.convert("L")
     ```
-3. Build the container via `docker-compose build`
-4. Redeploy via `docker-compose up`
-5. Verify that the stylized image is now in grayscale
+2. Import this method in api/main.py. Modify line 15 to the following.
+    ```
+    from utils.image import (
+        image_apply_watermark,
+        image_crop_center,
+        image_from_normalized_ndarray,
+        image_to_normalized_ndarray,
+        image_to_grayscale,
+    )
+3. Inspect the `generate_image` method in api/main.py at line 70. This is where we prepare images for the ML model and then post-process the response before relaying it back.
+4. Add the following at line 96
+    ```
+    result_image = image_to_grayscale(result_image)
+    ```
+5. Build the restart the app via `just compose-up`
+6. Verify that the stylized image is now in grayscale
 
 ## Notes
 
